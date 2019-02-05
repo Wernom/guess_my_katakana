@@ -1,0 +1,193 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: verdana, sans-serif; 
+    background-image: url(../images/background.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+
+main {
+    position: absolute;   
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#affichage {
+    position: relative;
+    top: 5vh;
+    text-align: center;
+}
+
+#choix {
+    margin-top: 8vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: flex-start;
+}
+
+#choix > * {
+    cursor: pointer;   
+    align-self: flex-start;
+    text-align: center;
+}
+
+.correct {
+    color: darkgreen;
+}
+.incorrect {
+    color: red;   
+}
+
+.solution {
+    display: none;
+    font-size: 60%;
+    text-align: center;
+}
+
+.correct .solution, .incorrect .solution {
+    display: block;   
+}
+
+
+/****************************************************
+ **                   Scores                       **
+ ****************************************************/
+#scores {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+/****************************************************
+ **              Menu des options                  **
+ ****************************************************/
+
+/* bouton pour afficher/cacher */
+#btnOptions {
+    position: absolute; 
+    top: 1vh;
+    left: 1vh;
+    cursor: pointer;
+}
+#btnOptions::before {
+    content: '\2630';
+    text-align: center;
+    border: solid 2px #000;
+    font-size: 3vh;
+    padding: 0vh 1vh 0.6vh 1vh;
+    border-radius: 4px;
+}
+
+/* zone des options */
+#options {
+    --bg-color: #1e3250;
+    --fg-color: white;
+    position: fixed;
+    display: none;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    color: var(--fg-color);
+    background-color: var(--bg-color);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#options > * {
+    margin: 2vh;   
+    min-width: 20vw; 
+}
+#options h2 {
+    text-align: center;   
+}
+#options label {
+    margin: 0 1vh; 
+    display: inline;
+    cursor: pointer;
+}
+#cbOptions:checked ~ #options {
+    display: flex;   
+}
+#cbOptions:checked ~ main {
+    display: none;   
+}
+#options .bouton {
+    display: inline-block;
+    border: solid 1px white;
+    padding: 1vh 2vh;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    width: auto;
+    box-shadow: 0px 0px 5px white;
+}
+#options .bouton:hover {
+    color: var(--bg-color);
+    background-color: var(--fg-color);
+}
+
+
+/**********************************************************
+ ***                   Style responsive                 ***
+ **********************************************************/
+
+
+@media all and (orientation: portrait) {
+    #choix { 
+        font-size: 20vw;
+    }
+    #affichage {
+        margin-top: 20vh;
+        font-size: 35vw;   
+    }
+    #scores {
+        width: 50%;
+        text-align: right;
+        font-size: 2vh;
+    }
+    #options {
+        font-size: 3vw;
+        min-height: 480px;
+        max-width: 600px;
+        min-width: 320px;
+    }
+}
+
+
+@media all and (orientation: landscape) {
+    #choix {
+        font-size: 20vh;
+    }
+    #affichage {
+        font-size: 35vh;   
+    }
+    #scores {
+        font-size: 2.7vh;
+    }
+    #options {
+        width: 80vw;
+        height: 90vh; 
+        font-size: 2.5vh;
+        line-height: 2.5vh;
+    }
+    #options p {
+        margin-bottom: 1vh;   
+    }
+    #options input {
+        height: 2.5vh;
+    }
+    #options table {
+        margin: 0;   
+    }
+    
+}
