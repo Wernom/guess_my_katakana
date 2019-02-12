@@ -1,193 +1,70 @@
-body {
-    padding: 0;
-    margin: 0;
-    font-family: verdana, sans-serif; 
-    background-image: url(../images/background.jpg);
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-}
+	/* Coded with love by Mutiullah Samim */
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			background: #60a3bc !important;
+		}
+		.user_card {
+			height: 400px;
+			width: 350px;
+			margin-top: auto;
+			margin-bottom: auto;
+			background: #f39c12;
+			position: relative;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			padding: 10px;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			border-radius: 5px;
 
-main {
-    position: absolute;   
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-}
-
-#affichage {
-    position: relative;
-    top: 5vh;
-    text-align: center;
-}
-
-#choix {
-    margin-top: 8vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    align-content: flex-start;
-}
-
-#choix > * {
-    cursor: pointer;   
-    align-self: flex-start;
-    text-align: center;
-}
-
-.correct {
-    color: darkgreen;
-}
-.incorrect {
-    color: red;   
-}
-
-.solution {
-    display: none;
-    font-size: 60%;
-    text-align: center;
-}
-
-.correct .solution, .incorrect .solution {
-    display: block;   
-}
-
-
-/****************************************************
- **                   Scores                       **
- ****************************************************/
-#scores {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-
-/****************************************************
- **              Menu des options                  **
- ****************************************************/
-
-/* bouton pour afficher/cacher */
-#btnOptions {
-    position: absolute; 
-    top: 1vh;
-    left: 1vh;
-    cursor: pointer;
-}
-#btnOptions::before {
-    content: '\2630';
-    text-align: center;
-    border: solid 2px #000;
-    font-size: 3vh;
-    padding: 0vh 1vh 0.6vh 1vh;
-    border-radius: 4px;
-}
-
-/* zone des options */
-#options {
-    --bg-color: #1e3250;
-    --fg-color: white;
-    position: fixed;
-    display: none;
-    overflow-y: scroll;
-    box-sizing: border-box;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 10px;
-    color: var(--fg-color);
-    background-color: var(--bg-color);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-#options > * {
-    margin: 2vh;   
-    min-width: 20vw; 
-}
-#options h2 {
-    text-align: center;   
-}
-#options label {
-    margin: 0 1vh; 
-    display: inline;
-    cursor: pointer;
-}
-#cbOptions:checked ~ #options {
-    display: flex;   
-}
-#cbOptions:checked ~ main {
-    display: none;   
-}
-#options .bouton {
-    display: inline-block;
-    border: solid 1px white;
-    padding: 1vh 2vh;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    width: auto;
-    box-shadow: 0px 0px 5px white;
-}
-#options .bouton:hover {
-    color: var(--bg-color);
-    background-color: var(--fg-color);
-}
-
-
-/**********************************************************
- ***                   Style responsive                 ***
- **********************************************************/
-
-
-@media all and (orientation: portrait) {
-    #choix { 
-        font-size: 20vw;
-    }
-    #affichage {
-        margin-top: 20vh;
-        font-size: 35vw;   
-    }
-    #scores {
-        width: 50%;
-        text-align: right;
-        font-size: 2vh;
-    }
-    #options {
-        font-size: 3vw;
-        min-height: 480px;
-        max-width: 600px;
-        min-width: 320px;
-    }
-}
-
-
-@media all and (orientation: landscape) {
-    #choix {
-        font-size: 20vh;
-    }
-    #affichage {
-        font-size: 35vh;   
-    }
-    #scores {
-        font-size: 2.7vh;
-    }
-    #options {
-        width: 80vw;
-        height: 90vh; 
-        font-size: 2.5vh;
-        line-height: 2.5vh;
-    }
-    #options p {
-        margin-bottom: 1vh;   
-    }
-    #options input {
-        height: 2.5vh;
-    }
-    #options table {
-        margin: 0;   
-    }
-    
-}
+		}
+		.brand_logo_container {
+			position: absolute;
+			height: 170px;
+			width: 170px;
+			top: -75px;
+			border-radius: 50%;
+			background: #60a3bc;
+			padding: 10px;
+			text-align: center;
+		}
+		.brand_logo {
+			height: 150px;
+			width: 150px;
+			border-radius: 50%;
+			border: 2px solid white;
+		}
+		.form_container {
+			margin-top: 100px;
+		}
+		.login_btn {
+			width: 100%;
+			background: #c0392b !important;
+			color: white !important;
+		}
+		.login_btn:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.login_container {
+			padding: 0 2rem;
+		}
+		.input-group-text {
+			background: #c0392b !important;
+			color: white !important;
+			border: 0 !important;
+			border-radius: 0.25rem 0 0 0.25rem !important;
+		}
+		.input_user,
+		.input_pass:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+			background-color: #c0392b !important;
+		}
