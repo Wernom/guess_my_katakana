@@ -79,7 +79,7 @@ html {
     width: 170px;
     top: -75px;
     border-radius: 50%;
-    background: #60a3bc;
+    background: #212121;
     padding: 10px;
     text-align: center;
 }
@@ -97,7 +97,7 @@ html {
 
 .login_btn {
     width: 100%;
-    background: #c0392b !important;
+    background: #212121 !important;
     color: white !important;
 }
 
@@ -111,7 +111,7 @@ html {
 }
 
 .input-group-text {
-    background: #c0392b !important;
+    background: #212121 !important;
     color: white !important;
     border: 0 !important;
     border-radius: 0.25rem 0 0 0.25rem !important;
