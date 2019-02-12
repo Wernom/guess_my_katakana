@@ -134,9 +134,7 @@ html {
 /*
     Chat
  */
-
-
-#content {
+#chat {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -148,7 +146,7 @@ html {
     background-color: beige;
     padding: 10px;
 }
-#content h2, #content h3 {
+#chat h2, #chat h3 {
     position: absolute;
     background-color: inherit;
     height: 22px;
@@ -161,17 +159,17 @@ html {
     border-left: inherit;
     border-right: inherit;
 }
-#content h2 {
+#chat h2 {
     top: -35px;
     left: -1px;
 }
-#content h3 {
+#chat h3 {
     right: -11px;
     top: -28px;
     transform-origin: left center;
     transform: translateX(100%) rotate(90deg);
 }
-#content main {
+#chat main {
     position: relative;
     height: calc(100% - 30px);
     width: calc(100% - 170px);
@@ -179,27 +177,27 @@ html {
     overflow-y: scroll;
     line-height: 1.2;
 }
-#content main p {
+#chat main p {
     line-height: 1;
     font-size: 16px;
     margin: 3px;
 }
-#content main .mp {
+#chat main .mp {
     color: darkblue;
 }
-#content main .moi {
+#chat main .moi {
     color: green;
 }
-#content main .system {
+#chat main .system {
     color: red;
 }
-#content main img {
+#chat main img {
     max-width: 50%;
     vertical-align: text-top;
 }
 
 /** Pied de zone de chat */
-#content footer {
+#chat footer {
     position: absolute;
     bottom: 0;
     padding: 0px;
@@ -207,19 +205,19 @@ html {
     height: 30px;
     background-color: inherit;
 }
-#content footer input {
+#chat footer input {
     height: 22px;
     font-size: 15px;
 }
-#content > footer input:first-child {
+#chat > footer input:first-child {
     width: calc(100% - 250px);
     font-size: 12px;
 }
-#content > footer input:last-child {
+#chat > footer input:last-child {
     float: right;
 }
 
-#content aside {
+#chat aside {
     width: 160px;
     float: right;
     margin: 0px;

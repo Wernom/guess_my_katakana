@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function(_e) {
         if (currentUser) {
             document.querySelector("#content main").innerHTML = "";
             document.getElementById("monMessage").value = "";
-            document.getElementById("login").innerHTML = id;
         }
     });
     sock.on("message", function(msg) {
@@ -29,10 +28,9 @@ document.addEventListener("DOMContentLoaded", function(_e) {
      *  Connexion de l'utilisateur au chat.
      */
     function connect() {
-        console.log(sock);
-        console.log("za<qewsrxdtf,bhji");
-        // recupération du pseudo
         var user = document.getElementById("pseudo").value.trim();
+        document.getElementById("log_in").hidden = true;
+        document.getElementById("chat").hidden = false;
         if (! user) return;
         currentUser = user;
         sock.emit("login", user);
