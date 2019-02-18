@@ -137,13 +137,13 @@ html {
 #chat {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 10%;
     transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translateX(-50%) translateY(-50%);
     -ms-transform: translateX(-50%) translateY(-50%);
-    height: 500px;
-    width: 700px;
-    background-color: beige;
+    height:100%;
+    width: 20%;
+    background-color: #c0392b;
     padding: 10px;
 }
 #chat h2, #chat h3 {
@@ -170,25 +170,58 @@ html {
     transform: translateX(100%) rotate(90deg);
 }
 #chat main {
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    scrollbar-darkshadow-color: #212121;
+    scrollbar-base-color: #212121;
     position: relative;
-    height: calc(100% - 30px);
-    width: calc(100% - 170px);
-    background-color: white;
+    margin-top: 5%;
+    height: 60%;
+    width: 100%;
+    background-color: #212121;
+    color:white;
     overflow-y: scroll;
     line-height: 1.2;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: white;
+    border-width: 2px;
+    box-shadow: none;
+    font-size: 25px;
 }
 #chat main p {
+    text-align: right;
+    background-color: #333333;
+    border-color: white;
+    border-width: 1px;
+    border-style:solid;
+    color: white;
+    text-align: right;
+    border-radius: 10px;
     line-height: 1;
-    font-size: 16px;
-    margin: 3px;
-}
+    font-size: 25px;
+    margin-top: 3px;
+    padding: 2px;
+    margin-bottom: 15px;
+    }
 #chat main .mp {
-    color: darkblue;
+    text-align: right;
+    background-color: #333333;
+    border-color: white;
+    border-width: 1px;
+    border-style:solid;
+    color: aqua;
 }
 #chat main .moi {
-    color: green;
+    text-align: left;
+    background-color: #333333;
+    border-color: white;
+    border-width: 1px;
+    border-style:solid;
+    color: gold;
 }
 #chat main .system {
+    border-width: 0;
+    background-color: #212121;
     color: red;
 }
 #chat main img {
@@ -198,20 +231,30 @@ html {
 
 /** Pied de zone de chat */
 #chat footer {
+
+    font-family: 'Yanone Kaffeesatz', sans-serif;
     position: absolute;
-    bottom: 0;
+    top:90%;
     padding: 0px;
     width: calc(100% - 20px);
     height: 30px;
     background-color: inherit;
 }
 #chat footer input {
-    height: 22px;
-    font-size: 15px;
+    height: auto;
+    font-size: 30px;
 }
 #chat > footer input:first-child {
-    width: calc(100% - 250px);
-    font-size: 12px;
+
+    box-shadow: none;
+    border-color: white;
+    position: relative;
+    left:5%;
+    top:-50px;
+    width: 90%;
+    font-size: 25px;
+    background-color: #212121;
+    color:white;
 }
 #chat > footer input:last-child {
     float: right;
@@ -306,4 +349,64 @@ html {
     height: auto;
     cursor: pointer;
     align-self: center;
+}
+
+#nameLogo{
+    height: 250px;
+    width: 250px;
+    margin-left: 20%;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+#btnEnvoyer, #btnImage{
+    position: relative;
+    top:-40px;
+    opacity: 0.7;
+    background-color: #c0392b;
+    color:white;
+    border-width: 1px;
+    border-style: solid;
+    border-color:white;
+    box-shadow: none;
+}
+#btnImage:hover{
+    opacity: 1;
+}
+#btnEnvoyer:hover{
+    opacity: 1;
+}
+
+                      ::-webkit-scrollbar {
+                          width: 12px;
+                          height: 12px;
+                      }
+::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+}
+::-webkit-scrollbar-thumb {
+    background: #212121;
+    border: 1px solid #ffffff;
+    border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #c0392b;
+}
+::-webkit-scrollbar-thumb:active {
+    background: #000000;
+}
+::-webkit-scrollbar-track {
+    background: #212121;
+    border: 0px none #ffffff;
+    border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+    background: #212121;
+}
+::-webkit-scrollbar-track:active {
+    background: #333333;
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
 }
