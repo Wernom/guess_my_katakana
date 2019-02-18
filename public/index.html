@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:300,400,700" rel="stylesheet">
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
           integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/style.css">
@@ -49,16 +51,20 @@
 
 <!--Page Jeu-->
 <!--Chat-->
-<div id="chat" hidden>
+<div id="userList">
     <aside id="liste">
     </aside>
+    <input type="button" value="Quitter" id="btnQuitter">
+</div>
+<div id="chat" hidden>
+    <img id="nameLogo" src="./ressources/GMK1.png" alt="Logo">
     <main>
     </main>
     <footer>
-        <input type="text" id="monMessage">
+        <input type="text" id="monMessage"><br>
         <input type="button" value="Envoyer" id="btnEnvoyer">
         <input type="button" value="Image" id="btnImage">
-        <input type="button" value="Quitter" id="btnQuitter">
+
     </footer>
     <div id="bcImage" style="display: none;">
         <header>
