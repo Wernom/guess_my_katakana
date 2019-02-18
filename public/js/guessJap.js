@@ -29,6 +29,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
      */
     function connect() {
         let user = document.getElementById("pseudo").value.trim();
+        if (user === ""){
+            return;
+        }
         document.getElementById("log_in").hidden = true;
         document.getElementById("chat").hidden = false;
         document.getElementById("drawing").hidden = false;
