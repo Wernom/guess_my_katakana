@@ -116,8 +116,12 @@ io.on('connection', function (socket) {
 
     // partage du dessin
     socket.on("drawing", function (data) {
-        console.log(data);
         socket.broadcast.emit("draw", data)
+    });
+
+    // Efface la zone de dessin
+    socket.on("erase", function (){
+        socket.broadcast.emit("erase")
     })
 
 });

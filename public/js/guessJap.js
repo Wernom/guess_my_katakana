@@ -97,11 +97,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         return txt;
     }
 
-
     function afficherListe(newList) {
         document.querySelector("aside").innerHTML = newList.join("<br>");
     }
-
 
     /**
      *  Envoyer un message
@@ -211,14 +209,13 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
 
 
-
-    // Module de dessin
-
+    // **********************************
+    //          Module de dessin
+    //***********************************
     sock.on("draw", function (dataToDraw) {
         const e = {clientX: dataToDraw.clientX, clientY: dataToDraw.clientY};
         switch (dataToDraw.action){
             case "mousemove":
-
                 act(currentCommand.move, e);
                 break;
             case "mousedown":
@@ -233,6 +230,10 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
     });
 
+    sock.on("erase", function(){
+        console.log("erase");
+        ctxBG.clearRect(0, 0, ctxBG.width, ctxBG.height);
+    });
 
     var dessin = document.getElementById("dessin");
     var overlay = document.getElementById("overlay");
@@ -266,6 +267,8 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     var ctxFG = overlay.getContext("2d");
 
     document.getElementById("new").addEventListener("click", function (e) {
+        console.log("send erase");
+        sock.emit("erase");
         ctxBG.clearRect(0, 0, ctxBG.width, ctxBG.height);
     });
 
@@ -423,10 +426,3 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
 
 });
-
-
-document.addEventListener("DOMContentLoaded", function (e) {
-
-});
-
-
