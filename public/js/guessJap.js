@@ -9,7 +9,7 @@ var estGagnant = false;
 var room;
 // on attache les événements que si le client est œcté.
 sock.on("bienvenue", function (id) {
-    if (currentUser) {
+    if (currentUser === id) {
         document.querySelector("main").innerHTML = "";
         document.getElementById("monMessage").value = "";
     }
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("room").hidden = true;
         document.getElementById("menu").hidden = false;
         document.getElementById("chat").hidden = false;
-        document.getElementById("userList").hidden = false;
+        document.getElementById("listBloc").hidden = false;
         sock.emit("joinRoom", room);
         sock.emit("login", currentUser);
     });
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("room").hidden = true;
         document.getElementById("drawing").hidden = false;
         document.getElementById("chat").hidden = false;
-        document.getElementById("userList").hidden = false;
+        document.getElementById("listBloc").hidden = false;
         sock.emit("joinRoom", room);
     });
 
