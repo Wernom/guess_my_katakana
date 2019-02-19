@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
         document.getElementById("log_in").hidden = true;
         document.getElementById("chat").hidden = false;
+        document.getElementById("listBloc").hidden = false;
         document.getElementById("drawing").hidden = false;
         if (!user) return;
         currentUser = user;
@@ -132,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         currentUser = null;
         document.getElementById("chat").hidden = true;
         document.getElementById("log_in").hidden = false;
+        document.getElementById("listBloc").hidden = true;
         sock.emit("logout");
     }
 
