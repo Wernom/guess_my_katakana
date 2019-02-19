@@ -24,6 +24,13 @@ io.on('connection', function (socket) {
     // message de debug
     console.log("Un client s'est connecté");
     var currentID = null;
+    var room = null;
+
+    socket.on('joinRoom', function(roomToJoin) {
+        room = roomToJoin;
+        socket.join(room);
+        console.log("connection to room: " + room);
+    });
 
     /**
      *  Doit être la première action après la connexion.
@@ -38,16 +45,17 @@ io.on('connection', function (socket) {
 
         console.log("Nouvel utilisateur : " + currentID);
         // envoi d'un message de bienvenue à ce client
-        socket.emit("bienvenue", id);
+        console.log(room);
+        socket.in(room).emit("bienvenue", id);
         // envoi aux autres clients 
-        socket.broadcast.emit("message", {
+        socket.in(room).emit("message", {
             from: null,
             to: null,
             text: currentID + " a rejoint la discussion",
             date: Date.now()
         });
         // envoi de la nouvelle liste à tous les clients connectés 
-        io.sockets.emit("liste", Object.keys(clients));
+        io.sockets.in(room).emit("liste", Object.keys(clients));
     });
 
 
@@ -119,13 +127,30 @@ io.on('connection', function (socket) {
     });
 
     // Efface la zone de dessin
-    socket.on("erase", function (){
+    socket.on("erase", function () {
         socket.broadcast.emit("erase")
     });
 
-    socket.on("find", function(aTrouver){
+    socket.on("find", function (aTrouver) {
         console.log(aTrouver);
         io.emit("printFind", aTrouver)
+    });
+
+    socket.on("trouvé", function (name) {
+        console.log("name");
+        clients[name].emit("message", {
+            from: null,
+            to: null,
+            text: "FÉLICITATION, vous avez trouvé la bonne réponse",
+            date: Date.now()
+        });
+
+        socket.broadcast.emit("message", {
+            from: null,
+            to: null,
+            text: name + " à trouver la bonne réponse",
+            date: Date.now()
+        });
     })
 
 });

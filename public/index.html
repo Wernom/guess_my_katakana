@@ -60,7 +60,7 @@
 </div>
 <div id="chat" hidden>
     <img id="nameLogo" src="./ressources/GMK1.png" alt="Logo">
-    <main>
+    <main id="cha">
     </main>
     <footer>
         <input type="text" id="monMessage"><br>
@@ -78,7 +78,7 @@
     </div>
 </div>
 
-<div id="glyph"></div>
+<div id="glyph" hidden></div>
 
 <div id="drawing" hidden>
     <canvas id="dessin" width="500" height="500"></canvas>
@@ -149,6 +149,13 @@
     </form>
 </div>
 
+<div id="room" hidden>
+    <h2>Nom du salon à rejoindre ou à créer</h2>
+    <input type="text" id="roomName" name="" class="form-control input_user" value=""
+           placeholder="Pseudonyme">
+    <button type="button" id="btnCreateRoom" name="button" class="btn login_btn">Créer</button>
+    <button type="button" id="btnJoinRoom" name="button" class="btn login_btn">Rejoindre</button>
+</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
