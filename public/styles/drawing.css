@@ -7,8 +7,9 @@
 }
 
 #drawing canvas {
+    border-radius: 5px;
     cursor: none;
-    border: solid 1px #000;
+    border: solid 5px white;
     width: 500px;
     height: 500px;
     position: absolute;
@@ -19,7 +20,7 @@
     opacity: 0.8;
 }
 #drawing canvas#dessin {
-    background-image: url('../images/bgDessin.png');
+    background-color: #212120;
     background-size: 50px 50px;
     background-repeat: repeat;
 }
