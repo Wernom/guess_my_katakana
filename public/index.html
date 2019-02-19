@@ -36,7 +36,8 @@
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                         </div>
-                        <input type="text" id="pseudo" name="" class="form-control input_user" value="" placeholder="Pseudonyme">
+                        <input type="text" id="pseudo" name="" class="form-control input_user" value=""
+                               placeholder="Pseudonyme">
                     </div>
 
                 </form>
@@ -51,17 +52,26 @@
 
 <!--Page Jeu-->
 <!--Chat-->
-<div id="userList">
-    <aside id="liste">
-    </aside>
-    <input type="button" value="Quitter" id="btnQuitter">
+<div id="listBloc" hidden>
+    <h1 id="TitleUserList">Liste des joueurs dans la partie</h1>
+    <div id="userList">
+        <aside id="liste">
+        </aside>
+
+    </div>
+    <div id="listButtons">
+        <input type="text" id="InvitationSender" placeholder="  Pseudo à inviter"><br>
+        <input type="button" value="Inviter" id="btnInviter"><br>
+        <input type="button" value="Quitter" id="btnQuitter">
+    </div>
 </div>
+
 <div id="chat" hidden>
     <img id="nameLogo" src="./ressources/GMK1.png" alt="Logo">
     <main>
     </main>
     <footer>
-        <input type="text" id="monMessage"><br>
+        <input type="text" id="monMessage" placeholder="  Votre message..."><br>
         <input type="button" value="Envoyer" id="btnEnvoyer">
         <input type="button" value="Image" id="btnImage">
 
@@ -82,7 +92,7 @@
     <div id="toolbox">
         <input type="radio" name="radCommande" id="tracer" checked> <label for="tracer"></label>
         <input type="radio" name="radCommande" id="gommer"> <label for="gommer"></label>
-        <input type="radio" name="radCommande" id="ligne">  <label for="ligne"></label>
+        <input type="radio" name="radCommande" id="ligne"> <label for="ligne"></label>
         <input type="range" id="size" min="1" max="50" value="5">
         <div id="new"></div>
     </div>
