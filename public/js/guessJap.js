@@ -143,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         currentUser = null;
         document.getElementById("chat").hidden = true;
         document.getElementById("log_in").hidden = false;
+        document.getElementById("listBloc").hidden = true;
         sock.emit("logout");
     }
 

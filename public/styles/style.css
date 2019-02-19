@@ -135,6 +135,9 @@ html {
     Chat
  */
 #chat {
+    border-right-color: white;
+    border-right-style: solid;
+    border-right-width: 2px;
     position: absolute;
     top: 50%;
     left: 10%;
@@ -184,9 +187,10 @@ html {
     border-radius: 10px;
     border-style: solid;
     border-color: white;
-    border-width: 2px;
+    border-width: 5px;
     box-shadow: none;
     font-size: 25px;
+    overflow-x: fragments;
 }
 #chat main p {
     text-align: right;
@@ -355,12 +359,13 @@ html {
 #nameLogo{
     height: 250px;
     width: 250px;
-    margin-left: 20%;
+    margin-left: 15%;
     border-radius: 50%;
     border: 2px solid white;
 }
 
 #btnEnvoyer, #btnImage{
+    border-radius: 10px;
     position: relative;
     top:-40px;
     opacity: 0.7;
@@ -410,4 +415,101 @@ html {
 }
 ::-webkit-scrollbar-corner {
     background: transparent;
+}
+
+#listBloc{
+    border-left-color: white;
+    border-left-style: solid;
+    border-left-width: 2px;
+    padding-top: 30px;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    color:white;
+    font-size: 15px;
+    position: absolute;
+    top: 0%;
+    left: 80%;
+    height: 100%;
+    width:20%;
+    background-color: #c0392b;
+    align-content: center;
+}
+
+#userList{
+    padding-top: 10px;
+    text-align: center;
+    background-color: #212121;
+    margin-left: auto;
+    margin-right: auto;
+    width:90%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 10px;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    scrollbar-darkshadow-color: #212121;
+    scrollbar-base-color: #212121;
+    position: relative;
+    margin-top: 5%;
+    height: 50%;
+    color:white;
+    overflow-y: scroll;
+    line-height: 1.2;
+    box-shadow: none;
+    font-size: 25px;
+}
+#TitleUserList{
+    font-size: 28px;
+    text-align: center;
+}
+
+
+#listButtons{
+    border-style: solid;
+    border-color: white;
+    border-width: 2px;
+    border-radius: 5px;
+    width:90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    align-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#btnQuitter,#btnInviter {
+    margin-top: 15px;
+    align-content: center;
+    text-align: center;
+    width:50%;
+    margin-left: 25%;
+    font-size: 30px;
+    border-radius: 10px;
+    opacity: 0.7;
+    background-color: #c0392b;
+    color:white;
+    border-width: 1px;
+    border-style: solid;
+    border-color:white;
+    box-shadow: none;
+}
+#btnQuitter{
+    margin-top: 50px;
+}
+#btnInviter:hover{
+     opacity: 1;
+ }
+#btnQuitter:hover{
+    opacity: 1;
+}
+#InvitationSender{
+    box-shadow: none;
+    border-color: white;
+    position: relative;
+    margin-left: 5%;
+    margin-bottom: 10px;
+    width: 90%;
+    font-size: 25px;
+    background-color: #212121;
+    color:white;
 }

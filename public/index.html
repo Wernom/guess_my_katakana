@@ -53,17 +53,26 @@
 
 <!--Page Jeu-->
 <!--Chat-->
-<div id="userList">
-    <aside id="liste">
-    </aside>
-    <input type="button" value="Quitter" id="btnQuitter">
+<div id="listBloc" hidden>
+    <h1 id="TitleUserList">Liste des joueurs dans la partie</h1>
+    <div id="userList">
+        <aside id="liste">
+        </aside>
+
+    </div>
+    <div id="listButtons">
+        <input type="text" id="InvitationSender" placeholder="  Pseudo à inviter"><br>
+        <input type="button" value="Inviter" id="btnInviter"><br>
+        <input type="button" value="Quitter" id="btnQuitter">
+    </div>
 </div>
+
 <div id="chat" hidden>
     <img id="nameLogo" src="./ressources/GMK1.png" alt="Logo">
     <main id="cha">
     </main>
     <footer>
-        <input type="text" id="monMessage"><br>
+        <input type="text" id="monMessage" placeholder="  Votre message..."><br>
         <input type="button" value="Envoyer" id="btnEnvoyer">
         <input type="button" value="Image" id="btnImage">
 
