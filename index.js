@@ -4,7 +4,6 @@ var app = express();
 var server = app.listen(8080, function () {
     console.log("C'est parti ! En attente de connexion sur le port 8080...");
 });
-var test = 123;
 // Ecoute sur les websockets
 var io = require('socket.io').listen(server);
 
@@ -122,6 +121,11 @@ io.on('connection', function (socket) {
     // Efface la zone de dessin
     socket.on("erase", function (){
         socket.broadcast.emit("erase")
+    });
+
+    socket.on("find", function(aTrouver){
+        console.log(aTrouver);
+        io.emit("printFind", aTrouver)
     })
 
 });
