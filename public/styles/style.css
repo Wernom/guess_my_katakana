@@ -9,6 +9,7 @@ html {
     background: #212121 !important;
 }
 .user_card {
+
     height: 400px;
     width: 350px;
     margin-top: auto;
@@ -42,10 +43,13 @@ html {
     border: 2px solid white;
 }
 .form_container {
+
     margin-top: 100px;
 }
 .login_btn {
-    width: 100%;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    margin-left: 25px;
+    margin-right:25px;
     background: #212121 !important;
     color: white !important;
 }
@@ -57,6 +61,7 @@ html {
     padding: 0 2rem;
 }
 .input-group-text {
+
     background: #2A2628 !important;
     color: white !important;
     border: 0 !important;
@@ -96,7 +101,7 @@ html {
 }
 
 .login_btn {
-    width: 100%;
+    width: 90%;
     background: #212121 !important;
     color: white !important;
 }
@@ -107,6 +112,7 @@ html {
 }
 
 .login_container {
+
     padding: 0 2rem;
 }
 
@@ -119,6 +125,7 @@ html {
 
 .input_user,
 .input_pass:focus {
+
     box-shadow: none !important;
     outline: 0px !important;
 }
@@ -206,7 +213,7 @@ html {
     margin-top: 3px;
     padding: 2px;
     margin-bottom: 15px;
-    }
+}
 #chat main .mp {
     text-align: right;
     background-color: #333333;
@@ -383,10 +390,10 @@ html {
     opacity: 1;
 }
 
-                      ::-webkit-scrollbar {
-                          width: 12px;
-                          height: 12px;
-                      }
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
 ::-webkit-scrollbar-button {
     width: 0px;
     height: 0px;
@@ -497,8 +504,8 @@ html {
     margin-top: 50px;
 }
 #btnInviter:hover{
-     opacity: 1;
- }
+    opacity: 1;
+}
 #btnQuitter:hover{
     opacity: 1;
 }
