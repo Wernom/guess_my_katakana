@@ -520,3 +520,19 @@ html {
     background-color: #212121;
     color:white;
 }
+#timer{
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    text-align: center;
+    align-content: center;
+    position: relative;
+    left:35%;
+    color:white;
+    /**border-style: solid;
+    border-color: white;
+    border-width: 5px;
+    border-top-width: 0;**/
+    width:30%;
+    height: 12%;
+    font-size: 80px;
+
+}
