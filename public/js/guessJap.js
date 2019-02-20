@@ -45,10 +45,12 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             return;
         }
         document.getElementById("log_in").hidden = true;
+        document.getElementById("timer").hidden = true;
         document.getElementById("room").hidden = false;
         if (!user) return;
         currentUser = user;
         console.log(user);
+
     }
 
 
@@ -150,6 +152,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         currentUser = null;
         document.getElementById("chat").hidden = true;
         document.getElementById("log_in").hidden = false;
+        document.getElementById("timer").hidden = true;
         document.getElementById("listBloc").hidden = true;
         sock.emit("logout");
     }
@@ -229,6 +232,8 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         room = document.getElementById("roomName").value;
         document.getElementById("room").hidden = true;
         document.getElementById("chat").hidden = false;
+        document.getElementById("timer").hidden = false;
+
         document.getElementById("listBloc").hidden = false;
         sock.emit("joinRoom", room);
         sock.emit("login", currentUser);
