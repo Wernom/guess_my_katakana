@@ -19,9 +19,11 @@ app.get('/', function (req, res) {
 var clients = {};       // id -> socket
 var rooms = {};
 var glyph = {};
-var pas_dessinateur = [];
+var pasEncoreDessinateur = [];
 var pas_trouve = [];
 var trouve = [];
+var nbRound = [];
+var currRound = [];
 
 function isEmpty(obj) {
 
@@ -46,6 +48,26 @@ function isEmpty(obj) {
     }
 
     return true;
+}
+
+function nextTurn(room) {
+    console.log("new game");
+    io.sockets.in(room).emit("next_turn");
+    var dessinateur = pasEncoreDessinateur[room].pop();
+    console.log(dessinateur);
+    console.log('ok');
+    io.sockets.in(room).emit("message", {
+        from: null,
+        to: null,
+        text: "Début de la partie",
+        date: Date.now()
+    });
+    clients[dessinateur].emit('dessinateur');
+    trouve[room].forEach(function (data) {
+        pas_trouve[room].push(data);
+    });
+    currRound[room]++;
+    trouve[room] = [];
 }
 
 // Quand un client se connecte, on le note dans la console
@@ -80,22 +102,27 @@ io.on('connection', function (socket) {
             id = id + "(1)";
         }
 
-        if (isEmpty(pas_dessinateur[room])){
-            pas_dessinateur[room] = [];
+        if (isEmpty(pasEncoreDessinateur[room])) {
+            pasEncoreDessinateur[room] = [];
         }
 
-        if (isEmpty(pas_trouve[room])){
+        if (isEmpty(pas_trouve[room])) {
             pas_trouve[room] = [];
         }
 
-        if (isEmpty(trouve[room])){
+        if (isEmpty(trouve[room])) {
             trouve[room] = [];
+        }
+
+        console.log(glyph[room]);
+        if (!isEmpty(glyph[room])) {
+            socket.emit("printFind", glyph[room]);
         }
 
         currentID = id;
         clients[currentID] = socket;
         rooms[room][currentID] = socket;
-        pas_dessinateur[room].push(currentID);
+        pasEncoreDessinateur[room].push(currentID);
         pas_trouve[room].push(currentID);
 
         console.log("Nouvel utilisateur : " + currentID);
@@ -210,25 +237,41 @@ io.on('connection', function (socket) {
             date: Date.now()
         });
 
-        trouve[room].push(name);
-
         io.sockets.in(room).emit("message", {
             from: null,
             to: null,
             text: name + " à trouver la bonne réponse",
             date: Date.now()
         });
+        trouve[room].push(name);
+
+        var index = pas_trouve[room].indexOf(name);
+        if (index > -1) {
+            pas_trouve[room].splice(index, 1);
+        }
+
+        console.log("pasTrouve" + pas_trouve[room].length);
+        if (pas_trouve[room].length === 1) {
+            console.log("oooooooooooooooooooooooooooooooooooooo");
+            console.log(typeof nbRound[room]);
+            console.log(typeof currRound[room]);
+            if (nbRound[room] < currRound[room]){
+                io.sockets.in(room).emit("end");
+            }else{
+                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+                nextTurn(room);
+            }
+        }
     });
 
-    socket.on("start", function(){
-        io.sockets.in(room).emit("next_turn");
-        var dessinateur = pas_dessinateur[room].pop();
-        console.log(dessinateur);
-        console.log('ok');
-        clients[dessinateur].emit('dessinateur');
-        trouve[room].forEach(function (data) {
-            pas_trouve[room].push(data);
-        });
-        trouve[room] = [];
+    socket.on("start", function (round) {
+        if (isEmpty(nbRound[room])){
+            nbRound[room] = Number(round);
+            currRound[room] = 0;
+        }
+        console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+
+        currRound[room] = 0;
+        nextTurn(room);
     });
 });

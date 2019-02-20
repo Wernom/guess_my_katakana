@@ -130,9 +130,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
 
         // envoi
-        console.log(msg + aTrouverChoix.key);
+        // console.log(msg + aTrouverChoix.key);
 
-        if (msg === aTrouverChoix.key && !estGagnant) {
+        if (msg === aTrouver.key && !estGagnant) {
             sock.emit("trouvé", currentUser);
             estGagnant = true;
         } else {
@@ -476,7 +476,8 @@ var last = null;
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("close_menu").addEventListener("click", function () {
         document.getElementById("drawing").hidden = false;
-        sock.emit('start');
+        var round = document.getElementById("round").value;
+        sock.emit('start', round);
         document.getElementById("menu").hidden = true;
     });
 });
@@ -507,14 +508,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, false);
 }, true);
 
-sock.on('next_turn', function(){
+sock.on('next_turn', function () {
     isDessinateur = false;
     document.getElementById("choix").hidden = true;
 });
 
-sock.on('dessinateur', function(){
+sock.on('dessinateur', function () {
     change();
     isDessinateur = true;
+    console.log("dessinateur");
     document.getElementById("choix").hidden = false;
     afficherChoix();
 });
@@ -534,9 +536,13 @@ function change() {
     last = aTrouverChoix.key;
 }
 
+
 sock.on("printFind", function (data) {
     aTrouver = data;
-    afficherTrucATrouver(data);
+    console.log("printFind : ");
+    console.log(data);
+    if (isDessinateur)
+        afficherTrucATrouver(data);
 });
 
 function afficherChoix() {
@@ -557,6 +563,11 @@ function afficherTrucATrouver() {
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
     })
 }
+
+sock.on("end", function () {
+    sock.emit("logout");
+    //afficher écran des cores.
+});
 
 /**
  *  Classe représentant l'ensemble des glyphes
