@@ -536,3 +536,25 @@ html {
     font-size: 80px;
 
 }
+
+#maDivCo,#maDivRoom{
+    margin-top: 50px;
+    margin-bottom: -50px;
+    color:white;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    align-content: center;
+    text-align: center;
+    font-size: 50px;
+
+}
+
+#maDivCo{
+    margin-top: 50px;
+    margin-bottom: -50px;
+}
+
+#maDivRoom{
+    line-height: 1;
+    margin-top: 60px;
+    margin-bottom: -85px;
+}
