@@ -621,3 +621,43 @@ function Glyphes(glyphes) {
     }
 }
 
+
+// **********************************
+//               Timer
+//***********************************
+
+var timeLeft;
+
+
+function StartTimer(length)
+{
+    timeLeft = length;
+
+    setInterval("Tick()", 1000);
+
+    var seconds = timeLeft % 60;
+    var secondsTens = Math.floor(seconds / 10);
+    var secondsOnes = seconds % 10;
+    var minutes = Math.floor(timeLeft / 60);
+
+    document.getElementById("timer").innerHTML = "" + minutes + ":" + secondsTens + secondsOnes;
+    //alert("" + minutes + ":" + secondsTens + secondsOnes);
+}
+
+
+function Tick(){
+    console.log(timeLeft);
+    if (timeLeft <= 0) {
+        //NE PAS METTRE LE MESSAGE DE FIN ICI SINON CA BOUCLE DE LINFINI
+    }
+    else {
+        timeLeft--;
+        var seconds = timeLeft % 60;
+        var secondsTens = Math.floor(seconds / 10);
+        var secondsOnes = seconds % 10;
+        var minutes = Math.floor(timeLeft / 60);
+        document.getElementById("timer").innerHTML = "" + minutes + ":" + secondsTens + secondsOnes;
+        //alert("AAAAAAAA" + minutes + ":" + secondsTens + secondsOnes);
+
+    }
+}
