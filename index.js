@@ -18,6 +18,34 @@ app.get('/', function (req, res) {
 /*** Gestion des clients et des connexions ***/
 var clients = {};       // id -> socket
 var rooms = {};
+var glyph = {};
+var pas_dessinateur = {};
+
+function isEmpty(obj) {
+
+    // null and undefined are "empty"
+    if (obj == null) return true;
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0) return false;
+    if (obj.length === 0) return true;
+
+    // If it isn't an object at this point
+    // it is empty, but it can't be anything *but* empty
+    // Is it empty?  Depends on your application.
+    if (typeof obj !== "object") return true;
+
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
+}
+
 // Quand un client se connecte, on le note dans la console
 io.on('connection', function (socket) {
 
@@ -25,7 +53,6 @@ io.on('connection', function (socket) {
     console.log("Un client s'est connecté");
     var currentID = null;
     var room = null;
-
 
     socket.on('joinRoom', function (roomToJoin) {
         room = roomToJoin;
@@ -36,7 +63,7 @@ io.on('connection', function (socket) {
             socket.emit('menu');
         } else {
             console.log("connection to room: " + room);
-            socket.emit('dessin')
+            socket.emit('dessin');
         }
 
         socket.join(room);
@@ -54,6 +81,7 @@ io.on('connection', function (socket) {
         currentID = id;
         clients[currentID] = socket;
         rooms[room][currentID] = socket;
+        pas_dessinateur[room].push = currentID;
 
         console.log("Nouvel utilisateur : " + currentID);
         // envoi d'un message de bienvenue à ce client
@@ -69,7 +97,6 @@ io.on('connection', function (socket) {
         // envoi de la nouvelle liste à tous les clients connectés 
         io.sockets.in(room).emit("liste", Object.keys(rooms[room]));
     });
-
 
     /**
      *  Réception d'un message et transmission à tous.
@@ -107,8 +134,14 @@ io.on('connection', function (socket) {
                 {from: null, to: null, text: currentID + " a quitté la discussion", date: Date.now()});
             // suppression de l'entrée
             delete clients[currentID];
+            delete rooms[room][currentID];
+            if (isEmpty(rooms[room])) {
+                console.log(room + ": deleted");
+                delete rooms[room];
+                delete glyph[room];
+            }
             // envoi de la nouvelle liste pour mise à jour
-            socket.broadcast.emit("liste", Object.keys(clients));
+            io.sockets.in(room).emit("liste", Object.keys(clients));
         }
     });
 
@@ -126,25 +159,32 @@ io.on('connection', function (socket) {
                 });
             // suppression de l'entrée
             delete clients[currentID];
+            delete rooms[room][currentID];
+            if (isEmpty(rooms[room])) {
+                console.log(room + ": deleted");
+                delete rooms[room];
+                delete glyph[room];
+            }
             // envoi de la nouvelle liste pour mise à jour
-            socket.broadcast.emit("liste", Object.keys(clients));
+            io.sockets.in(room).emit("liste", Object.keys(clients));
         }
         console.log("Client déconnecté");
     });
 
     // partage du dessin
     socket.on("drawing", function (data) {
-        socket.broadcast.emit("draw", data)
+        io.sockets.in(room).emit("draw", data)
     });
 
     // Efface la zone de dessin
     socket.on("erase", function () {
-        socket.broadcast.emit("erase")
+        io.sockets.in(room).emit("erase")
     });
 
-    socket.on("find", function (aTrouver) {
-        console.log(aTrouver);
-        io.emit("printFind", aTrouver)
+    socket.on("find", function (data) {
+        glyph[room] = data;
+        console.log(glyph[room]);
+        io.sockets.in(room).emit("printFind", glyph[room])
     });
 
     socket.on("trouvé", function (name) {
@@ -156,12 +196,18 @@ io.on('connection', function (socket) {
             date: Date.now()
         });
 
-        socket.broadcast.emit("message", {
+        io.sockets.in(room).emit("message", {
             from: null,
             to: null,
             text: name + " à trouver la bonne réponse",
             date: Date.now()
         });
-    })
+    });
+
+    socket.on("start", function(){
+        io.sockets.in(room).emit("next_turn");
+        var dessinateur = pas_dessinateur[room].pop();
+        clients[dessinateur].emit('dessinateur');
+    });
 
 });

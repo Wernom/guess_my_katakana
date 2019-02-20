@@ -3,10 +3,17 @@ let sock = io.connect();
 
 // utilisateur courant
 let currentUser = null;
+var aTrouverChoix;
 var aTrouver;
 var essai = 0;
 var estGagnant = false;
 var room;
+var basePoint = 10;
+var isHelped = false;
+var dessinateur;
+var score = 0;
+
+
 // on attache les événements que si le client est œcté.
 sock.on("bienvenue", function (id) {
     if (currentUser === id) {
@@ -123,9 +130,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
 
         // envoi
-        console.log(msg + aTrouver.key);
+        console.log(msg + aTrouverChoix.key);
 
-        if (msg === aTrouver.key && !estGagnant) {
+        if (msg === aTrouverChoix.key && !estGagnant) {
             sock.emit("trouvé", currentUser);
             estGagnant = true;
         } else {
@@ -229,6 +236,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     sock.on('dessin', function () {
         document.getElementById('drawing').hidden = false
+        document.getElementById('choix').hidden = false
     });
     sock.on('menu', function () {
         document.getElementById('menu').hidden = false
@@ -461,53 +469,26 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 //***********************************
 /** Ensemble des glyphes */
 var objGlyphes = null;
-
+var aTrouverKey;
 /** Dernier glyphe à faire deviner */
 var last = null;
 
-/**
- *  Objet simple permettant de gérer le score
- */
-var score = {
-    // score de la session
-    current: {ok: 0, total: 0},
-    // score global lu dans le localstorage (clé : "score")
-    global: (localStorage.getItem("score") ? JSON.parse(localStorage.getItem("score")) : {ok: 0, total: 0}),
-    /** Quelques fonctions utiles pour gérer le score */
-    reset: function () {
-        this.current.ok = 0;
-        this.current.total = 0;
-        this.global.ok = 0;
-        this.global.total = 0;
-    },
-    enregistrer: function () {
-        localStorage.setItem("score", JSON.stringify(this.global));
-    },
-    afficher: function () {
-        document.getElementById("scores").innerHTML =
-            "Session : " + score.current.ok + " / " + score.current.total +
-            " (" + ((score.current.total == 0) ? "0" : Math.round(score.current.ok * 100 / score.current.total)) + "%) | " +
-            "Global : " + score.global.ok + " / " + score.global.total +
-            " (" + ((score.global.total == 0) ? "0" : Math.round(score.global.ok * 100 / score.global.total)) + "%)";
-    }
-};
-
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("close_menu").addEventListener("click", function () {
-        // document.getElementById("drawing").hidden = false;
+        document.getElementById("drawing").hidden = false;
+        sock.emit('start');
+        afficherChoix();
         document.getElementById("menu").hidden = true;
     });
 });
 
 document.addEventListener("DOMContentLoaded", async function () {
-
     if (typeof fetch !== undefined) {
         // avec des promesses et l'instruction fetch
         var response = await fetch("./ressources/alphabet.json");
         if (response.status === 200) {
             var data = await response.json();
             objGlyphes = new Glyphes(data);
-            change();
         }
     } else {
         // "à l'ancienne" avec un appel AJAX
@@ -515,39 +496,27 @@ document.addEventListener("DOMContentLoaded", async function () {
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 objGlyphes = new Glyphes(JSON.parse(this.responseText));
-                change();
             }
         };
         xhttp.open("GET", "./ressources/alphabet.json", true);
         xhttp.send();
     }
-
     // association des écouteurs d'événements sur les éléments de formulaire des options
     var inputs = document.querySelectorAll("#options input:not([type=button])");
     inputs.forEach(function (input) {
         input.addEventListener("change", change, false);
     }, false);
-    // événement sur le bouton de réinitialisation du score
-    document.getElementById("btnReinit").addEventListener("click", function () {
-        // demande de confirmation (évite les fausses manipulations)
-        if (window.confirm("Voulez vous vraiment réinitialiser vos scores ?")) {
-            score.reset();
-            score.enregistrer();
-            score.afficher();
-        }
-    }, true);
-    // événement sur le corps du document
-    document.querySelector("main").addEventListener("click", function (e) {
-        if (document.getElementById("choix").classList.length > 0) {
-            change();
-        }
-    }, false);   // bubbling (capturing==false) --> ne capture l'événement qu'en tout dernier
-
-    // affichage préalable du score
-    score.afficher();
-
 }, true);
 
+
+sock.on('next_turn', function(){
+    //affiche panel dessin
+});
+
+sock.on('dessinateur', function(){
+    change();
+    document.getElementById("choix").hidden = false;
+});
 
 /**
  *  Change la lettre/syllabe à reconnaître.
@@ -556,13 +525,12 @@ function change() {
     // récupération de l'alphabet
     var alphabet = document.querySelector('#options input[name=radGlyphe]:checked').value;
 
-    if (alphabet == "les2") {
+    if (alphabet === "les2") {
         alphabet = (Math.random() < 0.5) ? 'hiragana' : 'katakana';
     }
     // sélection du glyphe
-    aTrouver = objGlyphes.getGlyphe(last, alphabet);
-    last = aTrouver.key;
-    sock.emit("find", aTrouver);
+    aTrouverChoix = objGlyphes.getThreeGlyphes(last, alphabet);
+    last = aTrouverChoix.key;
 }
 
 sock.on("printFind", function (data) {
@@ -570,8 +538,23 @@ sock.on("printFind", function (data) {
     afficherTrucATrouver(data);
 });
 
+function afficherChoix() {
+    document.getElementById("glyph").innerHTML = "<span onclick=\"choix(0)\"> " + aTrouverChoix[0].key + " </span>";
+    document.getElementById("glyph").innerHTML += "<span onclick=\"choix(1)\"> " + aTrouverChoix[1].key + " </span>";
+    document.getElementById("glyph").innerHTML += "<span onclick=\"choix(2)\"> " + aTrouverChoix[2].key + " </span>";
+}
+
+function choix(key) {
+    sock.emit("find", aTrouverChoix[key]);
+}
+
 function afficherTrucATrouver() {
-    document.getElementById("glyph").innerHTML = "&#" + aTrouver.ascii + ";";
+    document.getElementById("glyph").innerHTML = aTrouver.key;
+    document.getElementById("choix").innerHTML += "<p id='aide'>?</p>";
+    document.getElementById('aide').addEventListener('click', function () {
+        isHelped = true;
+        document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
+    })
 }
 
 /**
@@ -598,6 +581,9 @@ function Glyphes(glyphes) {
         });
     };
 
+    /**
+     * La clef désignant le glyphe à choisit
+     */
 
     /**
      *  Choisit trois glyphes différents entre elles et différentes de celle dont la clé
@@ -605,16 +591,20 @@ function Glyphes(glyphes) {
      *  @param old          String  clé du glyphe
      *  @param alphabet     String  alphabet considéré
      */
-    this.getGlyphe = function (old, alphabet) {
+    this.getThreeGlyphes = function (old, alphabet) {
         var eligible = getGlyphKeys();
+        var aTrouver = [];
         var aEviter = [old];
         var key;
-        do {
-            key = eligible[Math.random() * eligible.length | 0];
-        } while (aEviter.indexOf(key) >= 0);
-        aEviter.push(key);
-        aTrouver = {key: key, ascii: glyphes[alphabet][key]};
-
+        for (var i = 0; i < 3; i++) {
+            do {
+                key = eligible[Math.random() * eligible.length | 0];
+            }
+            while (aEviter.indexOf(key) >= 0);
+            aEviter.push(key);
+            aTrouver[i] = {key: key, ascii: glyphes[alphabet][key]};
+        }
+        console.log(aTrouver);
         return aTrouver;
     }
 }
