@@ -10,7 +10,7 @@ var estGagnant = false;
 var room;
 var basePoint = 10;
 var isHelped = false;
-var dessinateur;
+var isDessinateur = false;
 var score = 0;
 
 
@@ -477,7 +477,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("close_menu").addEventListener("click", function () {
         document.getElementById("drawing").hidden = false;
         sock.emit('start');
-        afficherChoix();
         document.getElementById("menu").hidden = true;
     });
 });
@@ -508,14 +507,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, false);
 }, true);
 
-
 sock.on('next_turn', function(){
-    //affiche panel dessin
+    isDessinateur = false;
+    document.getElementById("choix").hidden = true;
 });
 
 sock.on('dessinateur', function(){
     change();
+    isDessinateur = true;
     document.getElementById("choix").hidden = false;
+    afficherChoix();
 });
 
 /**

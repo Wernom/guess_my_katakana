@@ -19,7 +19,9 @@ app.get('/', function (req, res) {
 var clients = {};       // id -> socket
 var rooms = {};
 var glyph = {};
-var pas_dessinateur = {};
+var pas_dessinateur = [];
+var pas_trouve = [];
+var trouve = [];
 
 function isEmpty(obj) {
 
@@ -78,10 +80,23 @@ io.on('connection', function (socket) {
             id = id + "(1)";
         }
 
+        if (isEmpty(pas_dessinateur[room])){
+            pas_dessinateur[room] = [];
+        }
+
+        if (isEmpty(pas_trouve[room])){
+            pas_trouve[room] = [];
+        }
+
+        if (isEmpty(trouve[room])){
+            trouve[room] = [];
+        }
+
         currentID = id;
         clients[currentID] = socket;
         rooms[room][currentID] = socket;
-        pas_dessinateur[room].push = currentID;
+        pas_dessinateur[room].push(currentID);
+        pas_trouve[room].push(currentID);
 
         console.log("Nouvel utilisateur : " + currentID);
         // envoi d'un message de bienvenue à ce client
@@ -188,13 +203,14 @@ io.on('connection', function (socket) {
     });
 
     socket.on("trouvé", function (name) {
-        console.log("name");
         clients[name].emit("message", {
             from: null,
             to: null,
             text: "FÉLICITATION, vous avez trouvé la bonne réponse",
             date: Date.now()
         });
+
+        trouve[room].push(name);
 
         io.sockets.in(room).emit("message", {
             from: null,
@@ -207,7 +223,12 @@ io.on('connection', function (socket) {
     socket.on("start", function(){
         io.sockets.in(room).emit("next_turn");
         var dessinateur = pas_dessinateur[room].pop();
+        console.log(dessinateur);
+        console.log('ok');
         clients[dessinateur].emit('dessinateur');
+        trouve[room].forEach(function (data) {
+            pas_trouve[room].push(data);
+        });
+        trouve[room] = [];
     });
-
 });
