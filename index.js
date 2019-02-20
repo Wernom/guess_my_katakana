@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
 
 /*** Gestion des clients et des connexions ***/
 var clients = {};       // id -> socket
-
+var rooms = {};
 // Quand un client se connecte, on le note dans la console
 io.on('connection', function (socket) {
 
@@ -26,10 +26,20 @@ io.on('connection', function (socket) {
     var currentID = null;
     var room = null;
 
-    socket.on('joinRoom', function(roomToJoin) {
+
+    socket.on('joinRoom', function (roomToJoin) {
         room = roomToJoin;
+
+        if (rooms[room] == null) {
+            rooms[room] = {};
+            console.log("create room: " + room);
+            socket.emit('menu');
+        } else {
+            console.log("connection to room: " + room);
+            socket.emit('dessin')
+        }
+
         socket.join(room);
-        console.log("connection to room: " + room);
     });
 
     /**
@@ -40,8 +50,10 @@ io.on('connection', function (socket) {
         while (clients[id]) {
             id = id + "(1)";
         }
+
         currentID = id;
         clients[currentID] = socket;
+        rooms[room][currentID] = socket;
 
         console.log("Nouvel utilisateur : " + currentID);
         // envoi d'un message de bienvenue à ce client
@@ -55,7 +67,7 @@ io.on('connection', function (socket) {
             date: Date.now()
         });
         // envoi de la nouvelle liste à tous les clients connectés 
-        io.sockets.in(room).emit("liste", Object.keys(clients));
+        io.sockets.in(room).emit("liste", Object.keys(rooms[room]));
     });
 
 
@@ -74,10 +86,9 @@ io.on('connection', function (socket) {
             if (msg.from != msg.to) {
                 socket.emit("message", msg);
             }
-        }
-        else {
+        } else {
             console.log(" --> broadcast");
-            io.sockets.emit("message", msg);
+            io.sockets.in(room).emit("message", msg);
         }
     });
 

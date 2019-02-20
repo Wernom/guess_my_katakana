@@ -218,23 +218,20 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
     });
 
-    document.getElementById("btnCreateRoom").addEventListener("click", function () {
+    document.getElementById("btnRoom").addEventListener("click", function () {
         room = document.getElementById("roomName").value;
         document.getElementById("room").hidden = true;
-        document.getElementById("menu").hidden = false;
         document.getElementById("chat").hidden = false;
         document.getElementById("listBloc").hidden = false;
         sock.emit("joinRoom", room);
         sock.emit("login", currentUser);
     });
 
-    document.getElementById("btnJoinRoom").addEventListener("click", function () {
-        room = document.getElementById("roomName").value;
-        document.getElementById("room").hidden = true;
-        document.getElementById("drawing").hidden = false;
-        document.getElementById("chat").hidden = false;
-        document.getElementById("listBloc").hidden = false;
-        sock.emit("joinRoom", room);
+    sock.on('dessin', function () {
+        document.getElementById('drawing').hidden = false
+    });
+    sock.on('menu', function () {
+        document.getElementById('menu').hidden = false
     });
 
     // force l'affichage de l'écran de connexion
