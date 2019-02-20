@@ -1,15 +1,20 @@
 
 #drawing {
+    border-width: 5px;
+    border-color: white;
+    border-style: solid;
     position: relative;
+    top:5vh;
     width: 620px;
-    height: 500px;
+    height: 510px;
     margin: 10px auto;
+    padding:5%;
 }
 
 #drawing canvas {
     border-radius: 5px;
     cursor: none;
-    border: solid 5px white;
+    border-right: solid 5px white;
     width: 500px;
     height: 500px;
     position: absolute;
