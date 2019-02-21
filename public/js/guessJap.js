@@ -735,7 +735,7 @@ function beginTurn() {
 sock.on('launchTurn', function (data) {
     if (!isDessinateur) {
         var timer = data;
-        alert("aaaaaaaaaaaaaaaaaaa");
+
         StartTimer(timer);
     }
 });
