@@ -526,7 +526,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 sock.on('next_turn', function (data) {
     timeServer=data;
-sock.on('next_turn', function () {
     estGagnant = false;
     isHelped = false;
     isDessinateur = false;
