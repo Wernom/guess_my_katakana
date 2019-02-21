@@ -8,10 +8,9 @@ var aTrouver;
 var essai = 0;
 var estGagnant = false;
 var room;
-var basePoint = 10;
 var isHelped = false;
 var isDessinateur = false;
-var score = 0;
+var score = null;
 
 
 // on attache les événements que si le client est œcté.
@@ -32,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     sock.on("liste", function (liste) {
         if (currentUser) {
-            afficherListe(liste);
+            updateListe(liste);
         }
     });
 
@@ -70,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
         let classe = "";
 
-        if (data.from == currentUser) {
+        if (data.from === currentUser) {
             classe = "moi";
         } else if (data.from == null) {
             classe = "system";
@@ -134,13 +133,25 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         // envoi
         // console.log(msg + aTrouverChoix.key);
 
-        if (msg === aTrouver.key && !estGagnant) {
-            sock.emit("trouvé", currentUser);
-            estGagnant = true;
-        } else {
+        if (aTrouver == null){
             sock.emit("message", {from: currentUser, to: to, text: msg});
+            document.getElementById("monMessage").value = "";
+            return;
         }
 
+        if (msg === aTrouver.key && !estGagnant) {    //bonne réponse
+            sock.emit("trouvé", essai);
+            estGagnant = true;
+        } else if (msg.length < 2) {
+            essai++;
+
+            if (essai >= 2) {
+                afficherMessage({from: null, to: currentUser, text: "C'est perdu !!!!!!"});
+            }
+            sock.emit("message", {from: currentUser, to: to, text: msg});
+        }else{
+            sock.emit("message", {from: currentUser, to: to, text: msg});
+        }
         document.getElementById("monMessage").value = "";
     }
 
@@ -514,6 +525,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 }, true);
 
 sock.on('next_turn', function () {
+    estGagnant = false;
+    isHelped = false;
     isDessinateur = false;
     document.getElementById("choix").hidden = true;
 });
@@ -568,6 +581,32 @@ function afficherTrucATrouver() {
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
     })
 }
+
+function updateListe(listeScore) {
+    document.querySelector("aside").innerHTML = "";
+    // var list = {"you": 100, "me": 75, "foo": 116, "bar": 15};
+    var keysSorted = Object.keys(listeScore).sort(function (a, b) {
+        return listeScore[b] - listeScore[a]
+    });
+    keysSorted.forEach(function (data) {
+        console.log(data + "\t" + listeScore.data + '\t' + listeScore[data]);
+        document.querySelector("aside").innerHTML += data + ' - ' + listeScore[data] + '<br>';
+    });
+}
+
+sock.on('dessinateurPlusPoint', function (nbClient) {
+    if (isDessinateur) {
+        sock.emit('plusDessinateur');
+    }
+});
+
+sock.on('score', function (data) {
+    score = data;
+    console.log("SCORE");
+    console.log(score);
+    updateListe(score);
+
+});
 
 sock.on("end", function () {
     sock.emit("logout");
@@ -634,8 +673,7 @@ function Glyphes(glyphes) {
 var timeLeft;
 
 
-function StartTimer(length)
-{
+function StartTimer(length) {
     timeLeft = length;
 
     setInterval("Tick()", 1000);
@@ -650,7 +688,7 @@ function StartTimer(length)
 }
 
 
-function Tick(){
+function Tick() {
     console.log(timeLeft);
     if (timeLeft <= 0) {
         //NE PAS METTRE LE MESSAGE DE FIN ICI SINON CA BOUCLE DE LINFINI

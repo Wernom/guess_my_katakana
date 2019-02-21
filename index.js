@@ -24,25 +24,19 @@ var pas_trouve = [];
 var trouve = [];
 var nbRound = [];
 var currRound = [];
+var baseScore = 10;
+var score = [];
+var nbClientInRoom = [];
 
 function isEmpty(obj) {
 
-    // null and undefined are "empty"
     if (obj == null) return true;
 
-    // Assume if it has a length property with a non-zero value
-    // that that property is correct.
     if (obj.length > 0) return false;
     if (obj.length === 0) return true;
 
-    // If it isn't an object at this point
-    // it is empty, but it can't be anything *but* empty
-    // Is it empty?  Depends on your application.
     if (typeof obj !== "object") return true;
 
-    // Otherwise, does it have any properties of its own?
-    // Note that this doesn't handle
-    // toString and valueOf enumeration bugs in IE < 9
     for (var key in obj) {
         if (hasOwnProperty.call(obj, key)) return false;
     }
@@ -54,19 +48,44 @@ function nextTurn(room) {
     console.log("new game");
     io.sockets.in(room).emit("next_turn");
     var dessinateur = pasEncoreDessinateur[room].pop();
-    console.log(dessinateur);
-    console.log('ok');
-    io.sockets.in(room).emit("message", {
-        from: null,
-        to: null,
-        text: "Début de la partie",
-        date: Date.now()
-    });
-    clients[dessinateur].emit('dessinateur');
+
+
     trouve[room].forEach(function (data) {
         pas_trouve[room].push(data);
     });
-    currRound[room]++;
+
+    if (dessinateur == null) {
+        currRound[room]++;
+        console.log(currRound[room]);
+        console.log(nbRound[room]);
+        if (nbRound[room] <= currRound[room]) {
+            console.log('FIN PARTIE');
+            io.sockets.in(room).emit("end");
+            return;
+        } else {
+            pas_trouve[room].forEach(function (data) {
+                pasEncoreDessinateur[room].push(data);
+            });
+            dessinateur = pasEncoreDessinateur[room].pop();
+        }
+        io.sockets.in(room).emit("message", {
+            from: null,
+            to: null,
+            text: "Nouveau round !!!",
+            date: Date.now()
+        });
+    }else {
+        io.sockets.in(room).emit("message", {
+            from: null,
+            to: null,
+            text: "Début de la partie.",
+            date: Date.now()
+        });
+    }
+
+    console.log("dessinateur: " + dessinateur);
+    clients[dessinateur].emit('dessinateur');
+
     trouve[room] = [];
 }
 
@@ -119,11 +138,26 @@ io.on('connection', function (socket) {
             socket.emit("printFind", glyph[room]);
         }
 
+        if (isEmpty(score[room])){
+            score[room] = {};
+        }
+
+        if (isEmpty(nbClientInRoom[room])){
+            nbClientInRoom[room] = 0;
+        }
+
+
+
+
         currentID = id;
         clients[currentID] = socket;
         rooms[room][currentID] = socket;
         pasEncoreDessinateur[room].push(currentID);
         pas_trouve[room].push(currentID);
+        score[room][currentID] = 0;
+        console.log("INIT SCORE");
+        console.log(score);
+        nbClientInRoom[room]++;
 
         console.log("Nouvel utilisateur : " + currentID);
         // envoi d'un message de bienvenue à ce client
@@ -137,7 +171,7 @@ io.on('connection', function (socket) {
             date: Date.now()
         });
         // envoi de la nouvelle liste à tous les clients connectés 
-        io.sockets.in(room).emit("liste", Object.keys(rooms[room]));
+        io.sockets.in(room).emit("liste", score[room]);
     });
 
     /**
@@ -169,7 +203,7 @@ io.on('connection', function (socket) {
     // fermeture
     socket.on("logout", function () {
         // si client était identifié (devrait toujours être le cas)
-        if (currentID) {
+        if (currentID && rooms[room]) {
             console.log("Sortie de l'utilisateur " + currentID);
             // envoi de l'information de déconnexion
             socket.broadcast.emit("message",
@@ -177,6 +211,10 @@ io.on('connection', function (socket) {
             // suppression de l'entrée
             delete clients[currentID];
             delete rooms[room][currentID];
+            delete pasEncoreDessinateur[room][currentID];
+            delete pas_trouve[room][currentID];
+
+            //on suprime le salon quand plus personne n'est dedans
             if (isEmpty(rooms[room])) {
                 console.log(room + ": deleted");
                 delete rooms[room];
@@ -190,7 +228,7 @@ io.on('connection', function (socket) {
     // déconnexion de la socket
     socket.on("disconnect", function (reason) {
         // si client était identifié
-        if (currentID) {
+        if (currentID && rooms[room]) {
             // envoi de l'information de déconnexion
             socket.broadcast.emit("message",
                 {
@@ -202,6 +240,10 @@ io.on('connection', function (socket) {
             // suppression de l'entrée
             delete clients[currentID];
             delete rooms[room][currentID];
+            delete pasEncoreDessinateur[room][currentID];
+            delete pas_trouve[room][currentID];
+
+            //on suprime le salon quand plus personne n'est dedans
             if (isEmpty(rooms[room])) {
                 console.log(room + ": deleted");
                 delete rooms[room];
@@ -229,8 +271,14 @@ io.on('connection', function (socket) {
         io.sockets.in(room).emit("printFind", glyph[room])
     });
 
-    socket.on("trouvé", function (name) {
-        clients[name].emit("message", {
+    socket.on("trouvé", function (essai) {
+        score[room][currentID] += baseScore/(essai+1);
+        console.log("SCORE");
+        console.log(score[room]);
+        console.log(score[room][currentID]);
+
+
+        clients[currentID].emit("message", {
             from: null,
             to: null,
             text: "FÉLICITATION, vous avez trouvé la bonne réponse",
@@ -240,34 +288,34 @@ io.on('connection', function (socket) {
         io.sockets.in(room).emit("message", {
             from: null,
             to: null,
-            text: name + " à trouver la bonne réponse",
+            text: currentID + " à trouver la bonne réponse",
             date: Date.now()
         });
-        trouve[room].push(name);
+        trouve[room].push(currentID);
 
-        var index = pas_trouve[room].indexOf(name);
+        var index = pas_trouve[room].indexOf(currentID);
         if (index > -1) {
             pas_trouve[room].splice(index, 1);
         }
 
-        console.log("pasTrouve" + pas_trouve[room].length);
+        console.log("pasTrouve: " + pas_trouve[room].length);
         if (pas_trouve[room].length === 1) {
-            console.log("oooooooooooooooooooooooooooooooooooooo");
-            console.log(typeof nbRound[room]);
-            console.log(typeof currRound[room]);
-            if (nbRound[room] < currRound[room]){
-                io.sockets.in(room).emit("end");
-            }else{
-                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-                nextTurn(room);
-            }
+            io.sockets.in(room).emit("dessinateurPlusPoint", nbClientInRoom[room]);
+            nextTurn(room);
         }
+        io.sockets.in(room).emit("score", score[room]);
+
     });
 
+    socket.on('plusDessinateur', function () {
+        score[room][currentID] += baseScore + nbClientInRoom[room];
+        io.sockets.in(room).emit("score", score[room]);
+    });
+
+
     socket.on("start", function (round) {
-        if (isEmpty(nbRound[room])){
+        if (isEmpty(nbRound[room])) {
             nbRound[room] = Number(round);
-            currRound[room] = 0;
         }
         console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
 
