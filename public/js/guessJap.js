@@ -10,6 +10,8 @@ var estGagnant = false;
 var room;
 var isHelped = false;
 var isDessinateur = false;
+var score = 0;
+var timeServer=undefined;
 var score = null;
 
 
@@ -522,6 +524,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, false);
 }, true);
 
+sock.on('next_turn', function (data) {
+    timeServer=data;
 sock.on('next_turn', function () {
     estGagnant = false;
     isHelped = false;
@@ -709,10 +713,15 @@ function changeTurn(length) {
     return;
 }
 
-function beginTurn(data) {
-
-    sock.emit("beginTurn", data);
-    StartTimer( parseInt((document.getElementById('roundLength').value)));
+function beginTurn() {
+    if (timeServer==undefined) {
+        sock.emit("beginTurn", parseInt((document.getElementById('roundLength').value)));
+        StartTimer( parseInt((document.getElementById('roundLength').value)));
+    }
+    else{
+        sock.emit("beginTurn", timeServer);
+        StartTimer(timeServer);
+    }
 }
 
 sock.on('launchTurn', function (data) {

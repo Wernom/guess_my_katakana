@@ -45,9 +45,9 @@ function isEmpty(obj) {
 }
 
 
-function nextTurn(room) {
+function nextTurn(room,timer) {
     console.log("new game");
-    io.sockets.in(room).emit("next_turn");
+    io.sockets.in(room).emit("next_turn",timer);
     var dessinateur = pasEncoreDessinateur[room].pop();
 
 
@@ -200,7 +200,9 @@ io.on('connection', function (socket) {
         io.sockets.in(room).emit('launchTurn',data);
     });
 
-
+    socket.on('next_turn',function(data){
+        nextTurn(room,data);
+    });
     /**
      *  Gestion des déconnexions
      */
