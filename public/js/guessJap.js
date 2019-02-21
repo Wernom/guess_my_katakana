@@ -300,20 +300,28 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     };
 
     overlay.addEventListener("mousemove", function (e) {
-        sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mousemove"});
-        act(currentCommand.move, e);
+        if (isDessinateur){
+            sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mousemove"});
+            act(currentCommand.move, e);
+        }
     });
     overlay.addEventListener("mousedown", function (e) {
-        sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mousedown"});
-        act(currentCommand.down, e);
+        if (isDessinateur) {
+            sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mousedown"});
+            act(currentCommand.down, e);
+        }
     });
     overlay.addEventListener("mouseup", function (e) {
-        sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mouseup"});
-        act(currentCommand.up, e);
+        if (isDessinateur) {
+            sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mouseup"});
+            act(currentCommand.up, e);
+        }
     });
     overlay.addEventListener("mouseout", function (e) {
-        sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mouseout"});
-        act(currentCommand.out, e);
+        if (isDessinateur) {
+            sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mouseout"});
+            act(currentCommand.out, e);
+        }
     });
 
 
@@ -526,12 +534,15 @@ sock.on('next_turn', function () {
     estGagnant = false;
     isHelped = false;
     isDessinateur = false;
+
     document.getElementById("choix").hidden = true;
+    document.getElementById("cache_drawing").hidden = false;
 });
 
 sock.on('dessinateur', function () {
     change();
     isDessinateur = true;
+    document.getElementById("cache_drawing").hidden = true;
     console.log("dessinateur");
     document.getElementById("choix").hidden = false;
     afficherChoix();
