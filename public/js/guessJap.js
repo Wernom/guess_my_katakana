@@ -14,6 +14,7 @@ var score = 0;
 var timeServer;
 var score = null;
 var ready=false;
+var timer=false;
 // on attache les événements que si le client est œcté.
 sock.on("bienvenue", function (id) {
     if (currentUser === id) {
@@ -761,6 +762,7 @@ function Glyphes(glyphes) {
 var timeLeft;
 
 function StartTimer(length) {
+    timer=true;
     timeLeft = timeServer;
     console.log("TIMER:"+timeLeft);
     console.log("TIMER2:"+timeServer);
@@ -808,9 +810,19 @@ function beginTurn() {
 }
 
 sock.on('launchTurn', function (data) {
+    if(timer){
         ready=data[1];
         console.log("READY?"+ready);
+        timeLeft = data[0];
+        timeServer = data[0];
+    }
+    else {
+        ready = data[1];
+        console.log("READY?" + ready);
+        timeLeft = data[0];
+        timeServer = data[0];
         StartTimer(timeServer);
+    }
 });
 
 function sendTimer(){
