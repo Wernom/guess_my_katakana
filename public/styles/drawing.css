@@ -55,6 +55,7 @@
 #toolbox input[type=range] {
     margin: 0;
 }
+
 #toolbox label[for] {
     border: solid 1px #000;
 }
@@ -71,7 +72,7 @@
     background-image: url(../images/icone-rectangle.png);
 }
 #toolbox input:checked + label[for] {
-    box-shadow: blue 0 0 5px;
+    box-shadow: #c0392b 0 0 5px;
 }
 #toolbox #new {
     background-image: url(../images/icone-nouveau.png);
