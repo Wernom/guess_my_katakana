@@ -105,7 +105,7 @@
 </div>
 
 <div id="choix" hidden>
-    <p id="glyph"></p>
+    <p id="glyph" onclick="beginTurn(document.getElementById('roundLength').value)"></p>
     <p id="aide">?</p>
 </div>
 
@@ -156,7 +156,7 @@
         </div>
         <div>
             <p>Durée d'un round (en secondes):</p>
-            <input type="range" min="15" max="60" value="15" oninput="document.getElementById('AfficheRangeTime').textContent=value" />
+            <input id="roundLength" type="range" min="15" max="60" value="15" oninput="document.getElementById('AfficheRangeTime').textContent=value" />
             <span id="AfficheRangeTime">15  </span>
         </div>
         <div>
@@ -167,7 +167,7 @@
 
 
         <div>
-            <label id="close_menu" class="bouton">Lancer la partie</label>
+            <label id="close_menu" class="bouton" >Lancer la partie</label>
         </div>
     </form>
 </div>

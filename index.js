@@ -44,6 +44,7 @@ function isEmpty(obj) {
     return true;
 }
 
+
 function nextTurn(room) {
     console.log("new game");
     io.sockets.in(room).emit("next_turn");
@@ -193,6 +194,10 @@ io.on('connection', function (socket) {
             console.log(" --> broadcast");
             io.sockets.in(room).emit("message", msg);
         }
+    });
+
+    socket.on('beginTurn',function(data){
+        io.sockets.in(room).emit('launchTurn',data);
     });
 
 
