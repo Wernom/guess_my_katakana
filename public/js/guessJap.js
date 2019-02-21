@@ -632,7 +632,7 @@ function Glyphes(glyphes) {
 //***********************************
 
 var timeLeft;
-
+var RoundLengthFormulaire=document.getElementById("roundLength").value;
 
 function StartTimer(length)
 {
