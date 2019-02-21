@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
 
         data.text = traiterTexte(data.text);
-
+        speak(data.text);
         bcMessages.innerHTML += "<p class='" + classe + "'>" + date + " - " + data.from + " : " + data.text + "</p>";
         document.querySelector("main > p:last-child").scrollIntoView();
     }
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             return;
         }
 
-        if (msg === aTrouver.key && !estGagnant) {    //bonne réponse
+        if (msg === aTrouver.key && !estGagnant && !isDessinateur) {    //bonne réponse
             sock.emit("trouvé", essai);
             estGagnant = true;
         } else if (msg.length < 3) {
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             playRandomSond();
 
             if (essai >= 2) {
-                afficherMessage({from: null, to: currentUser, text: "C'est perdu !!!!!!"});
+                afficherMessage({from: null, to: currentUser, text: "C'est perdu !!!!!!", date: Date.now()});
             }
             sock.emit("message", {from: currentUser, to: to, text: msg, date: Date.now()});
         } else {
@@ -178,6 +178,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         for (let i = 0; i < aTrouver.key.length; ++i){
             if (msg.indexOf(aTrouver.key.charAt(i))){
                 afficherMessage({from: null, to: currentUser, text: "La réponse est proche", date: Date.now()});
+                break;
             }
         }
     }
@@ -620,6 +621,7 @@ sock.on('next_turn2', function (data) {
 
 sock.on('readyTurn',function(data){
     ready=data;
+    essai = 0;
 });
 
 sock.on('initGame',function(data){

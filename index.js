@@ -327,7 +327,6 @@ io.on('connection', function (socket) {
         if (isEmpty(nbRound[room])) {
             nbRound[room] = Number(round);
         }
-        console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
 
         currRound[room] = 0;
         nextTurn(room);
