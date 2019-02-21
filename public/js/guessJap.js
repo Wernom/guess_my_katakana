@@ -11,7 +11,7 @@ var room;
 var isHelped = false;
 var isDessinateur = false;
 var score = 0;
-var timeServer=undefined;
+var timeServer = undefined;
 var score = null;
 
 
@@ -22,6 +22,15 @@ sock.on("bienvenue", function (id) {
         document.getElementById("monMessage").value = "";
     }
 });
+
+function speak(message) {
+    var msg = new SpeechSynthesisUtterance(message);
+    var voices = window.speechSynthesis.getVoices();
+    msg.voice = voices[12];
+    msg.lang = 'ja';
+    window.speechSynthesis.speak(msg)
+}
+
 
 document.addEventListener("DOMContentLoaded", function (_e) {
 
@@ -90,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
         data.text = traiterTexte(data.text);
 
+        speak(data.text);
         bcMessages.innerHTML += "<p class='" + classe + "'>" + date + " - " + data.from + " : " + data.text + "</p>";
         document.querySelector("main > p:last-child").scrollIntoView();
     }
@@ -135,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         // envoi
         // console.log(msg + aTrouverChoix.key);
 
-        if (aTrouver == null){
+        if (aTrouver == null) {
             sock.emit("message", {from: currentUser, to: to, text: msg});
             document.getElementById("monMessage").value = "";
             return;
@@ -144,17 +154,55 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         if (msg === aTrouver.key && !estGagnant) {    //bonne réponse
             sock.emit("trouvé", essai);
             estGagnant = true;
-        } else if (msg.length < 2) {
+        } else if (msg.length < 3) {
             essai++;
+            help(msg);
+            playRandomSond();
 
             if (essai >= 2) {
                 afficherMessage({from: null, to: currentUser, text: "C'est perdu !!!!!!"});
             }
             sock.emit("message", {from: currentUser, to: to, text: msg});
-        }else{
+        } else {
             sock.emit("message", {from: currentUser, to: to, text: msg});
         }
         document.getElementById("monMessage").value = "";
+    }
+
+    function help(msg){
+
+        console.log("HELP");
+        console.log(aTrouver.key.length);
+        console.log(typeof aTrouver.key);
+        for (let i = 0; i < aTrouver.key.length; ++i){
+            if (msg.indexOf(aTrouver.key.charAt(i))){
+                afficherMessage({from: null, to: currentUser, text: "La réponse est proche"});
+            }
+        }
+    }
+
+    function playRandomSond() {
+        var rand = Math.random();
+        var audio = null;
+
+        if (rand < 1 / 6) {
+            //play age of empire 3
+            audio = new Audio('./ressources/son_des_enfers/Tu_ferai_mieux_dy_croire_mon_petit.mp3');
+            audio.play();
+        } else if (rand >= 1 / 6 && rand < 2 / 6) {
+            //play nein
+            audio = new Audio('./ressources/son_des_enfers/Nein.mp3');
+            audio.play();
+        } else if (rand >= 2 / 6 && rand < 3 / 6) {
+            //play Julien Lepers
+            audio = new Audio('./ressources/son_des_enfers/Cest_non.mp3');
+            audio.play();
+        } else if (rand >= 3 / 6 && rand < 4 / 6) {
+            //play GladOS
+            audio = new Audio('./ressources/son_des_enfers/nulite.wav');
+            audio.play();
+        }
+
     }
 
 
@@ -167,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("log_in").hidden = false;
         document.getElementById("timer").hidden = true;
         document.getElementById("listBloc").hidden = true;
+        document.getElementById("screen_score").hidden = false;
         sock.emit("logout");
     }
 
@@ -302,7 +351,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     };
 
     overlay.addEventListener("mousemove", function (e) {
-        if (isDessinateur){
+        if (isDessinateur) {
             sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mousemove"});
             act(currentCommand.move, e);
         }
@@ -486,6 +535,32 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         selection.apply(radios.item(i));
         radios.item(i).addEventListener("change", selection);
     }
+
+
+    sock.on("end", function (score) {
+        document.getElementById("screen_score").hidden = false;
+
+        document.getElementById("choix").hidden = true;
+        document.getElementById("drawing").hidden = true;
+        document.getElementById("chat").hidden = true;
+        document.getElementById("log_in").hidden = true;
+        document.getElementById("timer").hidden = true;
+        document.getElementById("listBloc").hidden = true;
+
+        var keysSorted = Object.keys(listeScore).sort(function (a, b) {
+            return listeScore[b] - listeScore[a]
+        });
+
+        keysSorted.forEach(function (data) {
+            document.getElementById("screen_score").innerHTML += data + ' - ' + listeScore[data] + '<br>';
+        });
+
+        document.getElementById("btnQuitter").addEventListener("click", quitter);
+
+        sock.emit("logout");
+        //afficher écran des cores.
+    });
+
 });
 
 // **********************************
@@ -493,7 +568,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 //***********************************
 /** Ensemble des glyphes */
 var objGlyphes = null;
-var aTrouverKey;
 /** Dernier glyphe à faire deviner */
 var last = null;
 
@@ -533,7 +607,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 }, true);
 
 sock.on('next_turn', function (data) {
-    timeServer=data;
+    timeServer = data;
     estGagnant = false;
     isHelped = false;
     isDessinateur = false;
@@ -618,10 +692,6 @@ sock.on('score', function (data) {
 
 });
 
-sock.on("end", function () {
-    sock.emit("logout");
-    //afficher écran des cores.
-});
 
 /**
  *  Classe représentant l'ensemble des glyphes
@@ -718,15 +788,14 @@ function changeTurn(length) {
     if (isDessinateur) {
         sock.emit("next_turn", length);
     }
-    return;
 }
 
 function beginTurn() {
-    if (timeServer==undefined) {
+    if (timeServer == undefined) {
         sock.emit("beginTurn", parseInt((document.getElementById('roundLength').value)));
-        StartTimer( parseInt((document.getElementById('roundLength').value)));
+        StartTimer(parseInt((document.getElementById('roundLength').value)));
     }
-    else{
+    else {
         sock.emit("beginTurn", timeServer);
         StartTimer(timeServer);
     }
