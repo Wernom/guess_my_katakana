@@ -165,8 +165,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         if (document.getElementById("bcImage").style.display === "none") {
             document.getElementById("bcImage").style.display = "block";
             document.getElementById("recherche").focus();
-        }
-        else {
+        } else {
             document.getElementById("bcImage").style.display = "none";
             document.getElementById("recherche").value = "";
             document.getElementById("bcResults").innerHTML = "";
@@ -438,8 +437,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         ctxFG.lineWidth = size.value;
         if (this.isDown) {
             this.dessiner(ctxFG, x, y);
-        }
-        else tracer.dessiner(ctxFG, x, y);
+        } else tracer.dessiner(ctxFG, x, y);
     };
     ligne.down = function (x, y) {
         this.__proto__.down.call(this, x, y);
@@ -632,13 +630,11 @@ function Glyphes(glyphes) {
 //***********************************
 
 var timeLeft;
-var RoundLengthFormulaire=document.getElementById("roundLength").value;
 
-function StartTimer(length)
-{
+function StartTimer(length) {
     timeLeft = length;
 
-    setInterval("Tick()", 1000);
+    setInterval("Tick(length)", 1000);
 
     var seconds = timeLeft % 60;
     var secondsTens = Math.floor(seconds / 10);
@@ -650,12 +646,12 @@ function StartTimer(length)
 }
 
 
-function Tick(){
+function Tick(length) {
     console.log(timeLeft);
     if (timeLeft <= 0) {
-        //NE PAS METTRE LE MESSAGE DE FIN ICI SINON CA BOUCLE DE LINFINI
-    }
-    else {
+        changeTurn(length);
+        return;
+    } else {
         timeLeft--;
         var seconds = timeLeft % 60;
         var secondsTens = Math.floor(seconds / 10);
@@ -666,3 +662,24 @@ function Tick(){
 
     }
 }
+
+function changeTurn(length) {
+    if (isDessinateur) {
+        sock.emit("next_turn", length);
+    }
+    return;
+}
+
+function beginTurn(data) {
+
+    sock.emit("beginTurn", data);
+    StartTimer( parseInt((document.getElementById('roundLength').value)));
+}
+
+sock.on('launchTurn', function (data) {
+    if (!isDessinateur) {
+        var timer = data;
+        alert("aaaaaaaaaaaaaaaaaaa");
+        StartTimer(timer);
+    }
+});
