@@ -14,7 +14,6 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/chat.html');
 });
 
-
 /*** Gestion des clients et des connexions ***/
 var clients = {};       // id -> socket
 var rooms = {};
