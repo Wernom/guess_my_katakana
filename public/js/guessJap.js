@@ -186,21 +186,24 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         var rand = Math.random();
         var audio = null;
 
-        if (rand < 1 / 6) {
+        if (rand < 1 / 8) {
             //play age of empire 3
             audio = new Audio('./ressources/son_des_enfers/Tu_ferai_mieux_dy_croire_mon_petit.mp3');
             audio.play();
-        } else if (rand >= 1 / 6 && rand < 2 / 6) {
+        } else if (rand >= 1 / 8 && rand < 2 / 8) {
             //play nein
             audio = new Audio('./ressources/son_des_enfers/Nein.mp3');
             audio.play();
-        } else if (rand >= 2 / 6 && rand < 3 / 6) {
+        } else if (rand >= 2 / 8 && rand < 3 / 8) {
             //play Julien Lepers
             audio = new Audio('./ressources/son_des_enfers/Cest_non.mp3');
             audio.play();
-        } else if (rand >= 3 / 6 && rand < 4 / 6) {
+        } else if (rand >= 3 / 8 && rand < 4 / 8) {
             //play GladOS
             audio = new Audio('./ressources/son_des_enfers/nulite.wav');
+            audio.play();
+        }else if (rand >= 4 / 8 && rand < 5 / 8){
+            audio = new Audio('./ressources/son_des_enfers/MOTUS_BOULE_NOIR.mp3');
             audio.play();
         }
 
