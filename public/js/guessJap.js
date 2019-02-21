@@ -536,13 +536,11 @@ sock.on('next_turn', function () {
     isDessinateur = false;
 
     document.getElementById("choix").hidden = true;
-    document.getElementById("cache_drawing").hidden = false;
 });
 
 sock.on('dessinateur', function () {
     change();
     isDessinateur = true;
-    document.getElementById("cache_drawing").hidden = true;
     console.log("dessinateur");
     document.getElementById("choix").hidden = false;
     afficherChoix();
