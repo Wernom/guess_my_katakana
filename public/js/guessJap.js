@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     var tracer = new Commande();
     tracer.dessiner = function (ctx, x, y) {
         ctx.beginPath();
-        ctx.arc(x, y, size.value / 2, 0, 2 * Math.PI);
+        ctx.arc(x, y, 40 / 2, 0, 2 * Math.PI);
         ctx.fill();
     };
     tracer.move = function (x, y) {
@@ -423,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     var gommer = new Commande();
     gommer.ssFG = "black";
     gommer.effacer = function (x, y) {
-        ctxBG.clearRect(x - size.value / 2, y - size.value / 2, size.value, size.value);
+        ctxBG.clearRect(x - 40 / 2, y - 40 / 2, 40, 40);
     };
     gommer.move = function (x, y) {
         this.__proto__.move.call(this, x, y);
@@ -431,7 +431,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         if (this.isDown) {
             this.effacer(x, y);
         }
-        ctxFG.strokeRect(x - size.value / 2, y - size.value / 2, size.value, size.value);
+        ctxFG.strokeRect(x - 40 / 2, y - 40 / 2, 40, 40);
     };
     gommer.down = function (x, y) {
         this.__proto__.down.call(this, x, y);
@@ -447,7 +447,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     var ligne = new Commande();
     ligne.ssFG = "white";
     ligne.dessiner = function (ctx, x, y) {
-        ctx.lineWidth = size.value;
+        ctx.lineWidth = 40;
         ctx.beginPath();
         ctx.moveTo(this.startX, this.startY);
         ctx.lineTo(x, y);
@@ -455,7 +455,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     };
     ligne.move = function (x, y) {
         this.__proto__.move.call(this, x, y);
-        ctxFG.lineWidth = size.value;
+        ctxFG.lineWidth = 40;
         if (this.isDown) {
             this.dessiner(ctxFG, x, y);
         } else tracer.dessiner(ctxFG, x, y);
