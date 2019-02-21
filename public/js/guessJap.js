@@ -11,10 +11,9 @@ var room;
 var isHelped = false;
 var isDessinateur = false;
 var score = 0;
-var timeServer=undefined;
+var timeServer;
 var score = null;
-
-
+var ready=false;
 // on attache les événements que si le client est œcté.
 sock.on("bienvenue", function (id) {
     if (currentUser === id) {
@@ -532,13 +531,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, false);
 }, true);
 
-sock.on('next_turn', function (data) {
-    timeServer=data;
+sock.on('next_turn2', function (data) {
     estGagnant = false;
     isHelped = false;
     isDessinateur = false;
 
     document.getElementById("choix").hidden = true;
+});
+
+sock.on('readyTurn',function(data){
+    ready=data;
+});
+
+sock.on('initGame',function(data){
+    timeServer=data;
+    console.log("TIMESERVER:"+timeServer);
 });
 
 sock.on('dessinateur', function () {
@@ -683,8 +690,9 @@ function Glyphes(glyphes) {
 var timeLeft;
 
 function StartTimer(length) {
-    timeLeft = length;
-
+    timeLeft = timeServer;
+    console.log("TIMER:"+timeLeft);
+    console.log("TIMER2:"+timeServer);
     setInterval("Tick(length)", 1000);
 
     var seconds = timeLeft % 60;
@@ -698,9 +706,12 @@ function StartTimer(length) {
 
 
 function Tick(length) {
-    console.log(timeLeft);
+
     if (timeLeft <= 0) {
-        changeTurn(length);
+        if(ready) {
+            changeTurn(timeServer);
+            timeLeft=0;
+        }
         return;
     } else {
         timeLeft--;
@@ -722,20 +733,17 @@ function changeTurn(length) {
 }
 
 function beginTurn() {
-    if (timeServer==undefined) {
-        sock.emit("beginTurn", parseInt((document.getElementById('roundLength').value)));
-        StartTimer( parseInt((document.getElementById('roundLength').value)));
-    }
-    else{
-        sock.emit("beginTurn", timeServer);
-        StartTimer(timeServer);
-    }
+        sock.emit("beginTurn", [timeServer,true]);
+
 }
 
 sock.on('launchTurn', function (data) {
-    if (!isDessinateur) {
-        var timer = data;
-
-        StartTimer(timer);
-    }
+        ready=data[1];
+        console.log("READY?"+ready);
+        StartTimer(timeServer);
 });
+
+function sendTimer(){
+    console.log('aaaaaaaaaaaa:'+parseInt((document.getElementById('roundLength').value)));
+    sock.emit("beginGame", parseInt((document.getElementById('roundLength').value)));
+}
