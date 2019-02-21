@@ -47,7 +47,7 @@ function isEmpty(obj) {
 
 function nextTurn(room,timer) {
     console.log("new game");
-    io.sockets.in(room).emit("next_turn",timer);
+    io.sockets.in(room).emit("next_turn2",timer);
     var dessinateur = pasEncoreDessinateur[room].pop();
 
 
@@ -83,7 +83,7 @@ function nextTurn(room,timer) {
             date: Date.now()
         });
     }
-
+    io.sockets.in(room).emit('readyTurn',false);
     console.log("dessinateur: " + dessinateur);
     clients[dessinateur].emit('dessinateur');
 
@@ -202,6 +202,10 @@ io.on('connection', function (socket) {
 
     socket.on('next_turn',function(data){
         nextTurn(room,data);
+    });
+
+    socket.on('beginGame',function(data){
+        io.sockets.in(room).emit('initGame',data);
     });
     /**
      *  Gestion des déconnexions
