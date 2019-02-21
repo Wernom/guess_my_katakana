@@ -211,6 +211,8 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     }
 
 
+
+
     /**
      *  Quitter le chat et revenir à la page d'accueil.
      */
@@ -763,7 +765,32 @@ function Glyphes(glyphes) {
 // **********************************
 //               Timer
 //***********************************
+function playRandomSondTime() {
+    var rand = Math.random();
+    var audio = null;
 
+    if (rand < 1 / 8) {
+        //play terminator
+        audio = new Audio('./ressources/son_des_enfers/it_is_time.wav');
+        audio.play();
+    } else if (rand >= 1 / 8 && rand < 2 / 8) {
+        //play été de tous les records
+        audio = new Audio('./ressources/son_des_enfers/quand_vous_voulez.mp3');
+        audio.play();
+    } else if (rand >= 2 / 8 && rand < 3 / 8) {
+        //play le 5e éléments
+        audio = new Audio('./ressources/son_des_enfers/faut_qu_ca_pop.mp3');
+        audio.play();
+    } else if (rand >= 3 / 8 && rand < 4 / 8) {
+        //play full metal jacket1
+        audio = new Audio('./ressources/son_des_enfers/temps.mp3');
+        audio.play();
+    }else if (rand >= 4 / 8 && rand < 5 / 8){
+        audio = new Audio('./ressources/son_des_enfers/comique.mp3');
+        audio.play();
+    }
+
+}
 var timeLeft;
 
 function StartTimer(length) {
@@ -784,7 +811,9 @@ function StartTimer(length) {
 
 
 function Tick(length) {
-
+    if(timeLeft==7){
+        playRandomSondTime();
+    }
     if (timeLeft <= 0) {
         if(ready) {
             changeTurn(timeServer);
