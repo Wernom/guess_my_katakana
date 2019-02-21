@@ -91,6 +91,8 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
 
         let date = new Date(data.date);
+        console.log(date);
+        console.log(data.date);
         date = date.toISOString().substr(11, 8);
         if (data.from == null) {
             data.from = "[admin]";
@@ -98,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
         data.text = traiterTexte(data.text);
 
-        speak(data.text);
         bcMessages.innerHTML += "<p class='" + classe + "'>" + date + " - " + data.from + " : " + data.text + "</p>";
         document.querySelector("main > p:last-child").scrollIntoView();
     }
@@ -145,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         // console.log(msg + aTrouverChoix.key);
 
         if (aTrouver == null) {
-            sock.emit("message", {from: currentUser, to: to, text: msg});
+            sock.emit("message", {from: currentUser, to: to, text: msg, date: Date.now()});
             document.getElementById("monMessage").value = "";
             return;
         }
@@ -161,9 +162,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             if (essai >= 2) {
                 afficherMessage({from: null, to: currentUser, text: "C'est perdu !!!!!!"});
             }
-            sock.emit("message", {from: currentUser, to: to, text: msg});
+            sock.emit("message", {from: currentUser, to: to, text: msg, date: Date.now()});
         } else {
-            sock.emit("message", {from: currentUser, to: to, text: msg});
+            sock.emit("message", {from: currentUser, to: to, text: msg, date: Date.now()});
         }
         document.getElementById("monMessage").value = "";
     }
@@ -175,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         console.log(typeof aTrouver.key);
         for (let i = 0; i < aTrouver.key.length; ++i){
             if (msg.indexOf(aTrouver.key.charAt(i))){
-                afficherMessage({from: null, to: currentUser, text: "La réponse est proche"});
+                afficherMessage({from: null, to: currentUser, text: "La réponse est proche", date: Date.now()});
             }
         }
     }
@@ -300,8 +301,8 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     });
 
     sock.on('dessin', function () {
-        document.getElementById('drawing').hidden = false
-        document.getElementById('choix').hidden = false
+        document.getElementById('drawing').hidden = false;
+        document.getElementById('choix').hidden = false;
     });
     sock.on('menu', function () {
         document.getElementById('menu').hidden = false
