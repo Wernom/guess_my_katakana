@@ -340,7 +340,10 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
 
     function rejoindre(){
-        sock.emit("joinRoom",roomJoin);
+        var name=currentUser;
+        sock.emit("joinRoom", roomJoin);
+        sock.emit("logout");
+        sock.emit("login", name);
         document.getElementById("menu").hidden = true;
 
     }
