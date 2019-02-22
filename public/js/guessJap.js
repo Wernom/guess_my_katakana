@@ -719,8 +719,6 @@ function afficherTrucATrouver() {
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
 
         document.getElementById("aide").hidden = true;
-        sock.emit("aide_point",currentUser),
-        isHelped=false;
     })
 }
 
@@ -738,7 +736,7 @@ function updateListe(listeScore) {
 
 sock.on('dessinateurPlusPoint', function (nbClient) {
     if (isDessinateur) {
-        sock.emit('plusDessinateur');
+        sock.emit('plusDessinateur',isHelped);
     }
 });
 
