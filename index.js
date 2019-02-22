@@ -23,7 +23,7 @@ var pas_trouve = [];
 var trouve = [];
 var nbRound = [];
 var currRound = [];
-var baseScore = 10;
+var baseScore = 7;
 var score = [];
 var nbClientInRoom = [];
 
@@ -85,7 +85,7 @@ function nextTurn(room,timer) {
     io.sockets.in(room).emit('readyTurn',false);
     console.log("dessinateur: " + dessinateur);
     clients[dessinateur].emit('dessinateur');
-
+    io.sockets.in(room).emit('erase');
     trouve[room] = [];
 }
 
@@ -246,7 +246,7 @@ io.on('connection', function (socket) {
                 delete glyph[room];
             }
             // envoi de la nouvelle liste pour mise à jour
-            io.sockets.in(room).emit("liste", Object.keys(clients));
+            io.sockets.in(room).emit("liste", Objet.keys(clients));
         }
     });
 
@@ -296,8 +296,8 @@ io.on('connection', function (socket) {
         io.sockets.in(room).emit("printFind", glyph[room])
     });
 
-    socket.on("trouvé", function (essai) {
-        score[room][currentID] += baseScore/(essai+1);
+    socket.on("trouvé", function (data) {
+        score[room][currentID] += Math.round(baseScore/(data.essai+1) + data.point);
         console.log("SCORE");
         console.log(score[room]);
         console.log(score[room][currentID]);
