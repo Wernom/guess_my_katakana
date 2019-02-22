@@ -44,9 +44,9 @@ function isEmpty(obj) {
 }
 
 
-function nextTurn(room,timer) {
+function nextTurn(room, timer) {
     console.log("new game");
-    io.sockets.in(room).emit("next_turn2",timer);
+    io.sockets.in(room).emit("next_turn2", timer);
     var dessinateur = pasEncoreDessinateur[room].pop();
 
 
@@ -60,7 +60,7 @@ function nextTurn(room,timer) {
         console.log(nbRound[room]);
         if (nbRound[room] <= currRound[room]) {
             console.log('FIN PARTIE');
-            io.sockets.in(room).emit("end",score[room]);
+            io.sockets.in(room).emit("end", score[room]);
             return;
         } else {
             pas_trouve[room].forEach(function (data) {
@@ -74,7 +74,7 @@ function nextTurn(room,timer) {
             text: "Nouveau round !!!",
             date: Date.now()
         });
-    }else {
+    } else {
         io.sockets.in(room).emit("message", {
             from: null,
             to: null,
@@ -82,7 +82,7 @@ function nextTurn(room,timer) {
             date: Date.now()
         });
     }
-    io.sockets.in(room).emit('readyTurn',false);
+    io.sockets.in(room).emit('readyTurn', false);
     console.log("dessinateur: " + dessinateur);
     clients[dessinateur].emit('dessinateur');
     io.sockets.in(room).emit('erase');
@@ -113,7 +113,6 @@ io.on('connection', function (socket) {
     });
 
 
-
     /**
      *  Doit être la première action après la connexion.
      *  @param  id  string  l'identifiant saisi par le client
@@ -140,15 +139,13 @@ io.on('connection', function (socket) {
             socket.emit("printFind", glyph[room]);
         }
 
-        if (isEmpty(score[room])){
+        if (isEmpty(score[room])) {
             score[room] = {};
         }
 
-        if (isEmpty(nbClientInRoom[room])){
+        if (isEmpty(nbClientInRoom[room])) {
             nbClientInRoom[room] = 0;
         }
-
-
 
 
         currentID = id;
@@ -187,7 +184,7 @@ io.on('connection', function (socket) {
         // si message privé, envoi seulement au destinataire
         if (msg.to != null && clients[msg.to] !== undefined) {
             console.log(" --> message privé");
-            console.log( clients[msg.to]);
+            console.log(clients[msg.to]);
             clients[msg.to].emit("message", msg);
             if (msg.from != msg.to) {
                 socket.emit("message", msg);
@@ -198,29 +195,25 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('beginTurn',function(data){
-        io.sockets.in(room).emit('launchTurn',data);
+    socket.on('beginTurn', function (data) {
+        io.sockets.in(room).emit('launchTurn', data);
     });
 
-    socket.on('next_turn',function(data){
-        nextTurn(room,data);
+    socket.on('next_turn', function (data) {
+        nextTurn(room, data);
     });
 
-    socket.on('beginGame',function(data){
-        io.sockets.in(room).emit('initGame',data);
+    socket.on('beginGame', function (data) {
+        io.sockets.in(room).emit('initGame', data);
     });
 
-    socket.on('send_invit',function(data){
-            console.log("AAAAAAAAAAAAAAAAAA"+data[1]);
-            var target=data[1];
-            console.log("AAAAAAAAAAAAAAAAAA"+target);
-           clients[target].emit('invitation',data);
+    socket.on('send_invit', function (data) {
+        console.log("AAAAAAAAAAAAAAAAAA" + data[1]);
+        var target = data[1];
+        console.log("AAAAAAAAAAAAAAAAAA" + target);
+        clients[target].emit('invitation', data);
     });
 
-    socket.on("aide_point",function(data){
-        score[room][data] -=2;
-        io.sockets.in(room).emit("score", score[room]);
-    });
     /**
      *  Gestion des déconnexions
      */
@@ -326,15 +319,22 @@ io.on('connection', function (socket) {
         console.log("pasTrouve: " + pas_trouve[room].length);
         if (pas_trouve[room].length === 1) {
             io.sockets.in(room).emit("dessinateurPlusPoint", nbClientInRoom[room]);
-            nextTurn(room);
+
+            nextTurn(room, data[1]);
         }
         io.sockets.in(room).emit("score", score[room]);
 
     });
 
-    socket.on('plusDessinateur', function () {
-        score[room][currentID] += baseScore + nbClientInRoom[room];
-        io.sockets.in(room).emit("score", score[room]);
+    socket.on('plusDessinateur', function (malus) {
+
+        if (malus) {
+            score[room][currentID] += (baseScore + nbClientInRoom[room]) / 2;
+            io.sockets.in(room).emit("score", score[room]);
+        } else {
+            score[room][currentID] += baseScore + nbClientInRoom[room];
+            io.sockets.in(room).emit("score", score[room]);
+        }
     });
 
 

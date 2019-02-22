@@ -756,7 +756,7 @@ function updateListe(listeScore) {
 
 sock.on('dessinateurPlusPoint', function (nbClient) {
     if (isDessinateur) {
-        sock.emit('plusDessinateur');
+        sock.emit('plusDessinateur',isHelped);
     }
 });
 
