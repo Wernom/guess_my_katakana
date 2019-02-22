@@ -60,7 +60,7 @@ function nextTurn(room,timer) {
         console.log(nbRound[room]);
         if (nbRound[room] <= currRound[room]) {
             console.log('FIN PARTIE');
-            io.sockets.in(room).emit("end");
+            io.sockets.in(room).emit("end",score[room]);
             return;
         } else {
             pas_trouve[room].forEach(function (data) {

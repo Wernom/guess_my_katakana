@@ -581,7 +581,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     }
 
 
-    sock.on("end", function (score) {
+    sock.on("end", function (listeScore) {
         document.getElementById("screen_score").hidden = false;
 
         document.getElementById("choix").hidden = true;
@@ -596,7 +596,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         });
 
         keysSorted.forEach(function (data) {
-            document.getElementById("screen_score").innerHTML += data + ' - ' + listeScore[data] + '<br>';
+            document.getElementById("classement").innerHTML += data + ' : ' + listeScore[data] + "points"+'<br>';
         });
 
         document.getElementById("btnQuitter").addEventListener("click", quitter);
@@ -732,7 +732,7 @@ function updateListe(listeScore) {
     });
     keysSorted.forEach(function (data) {
         console.log(data + "\t" + listeScore.data + '\t' + listeScore[data]);
-        document.querySelector("aside").innerHTML += data + ' - ' + listeScore[data] + '<br>';
+        document.querySelector("aside").innerHTML += data + ' : ' + listeScore[data] + "pts"+ '<br>';
     });
 }
 
