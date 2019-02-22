@@ -10,7 +10,6 @@ var estGagnant = false;
 var room;
 var isHelped = false;
 var isDessinateur = false;
-var score = 0;
 var timeServer;
 var score = null;
 var ready = false;
@@ -155,17 +154,21 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
 
         if (msg === aTrouver.key && !estGagnant && !isDessinateur) {    //bonne réponse
-            sock.emit("trouvé", [essai,timeServer]);
+            var point = (1 - timer / timeServer) * 5;
+            sock.emit("trouvé", {essai: essai, point: point});
             estGagnant = true;
         } else if (msg.length < 3) {
-            essai++;
-            help(msg);
-            playRandomSond();
+            console.log('NON');
 
-            if (essai >= 2) {
+
+            if (essai >= 3) {
                 afficherMessage({from: null, to: currentUser, text: "C'est perdu !!!!!!", date: Date.now()});
+            } else {
+                essai++;
+                help(msg);
+                playRandomSondError();
+                sock.emit("message", {from: currentUser, to: to, text: msg, date: Date.now()});
             }
-            sock.emit("message", {from: currentUser, to: to, text: msg, date: Date.now()});
         } else {
             sock.emit("message", {from: currentUser, to: to, text: msg, date: Date.now()});
         }
@@ -176,16 +179,14 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
         console.log("HELP");
         console.log(aTrouver.key.length);
-        console.log(typeof aTrouver.key);
-        for (let i = 0; i < aTrouver.key.length; ++i) {
-            if (msg.indexOf(aTrouver.key.charAt(i))) {
-                afficherMessage({from: null, to: currentUser, text: "La réponse est proche", date: Date.now()});
-                break;
-            }
+        console.log(aTrouver.key);
+        console.log(msg.indexOf(aTrouver.key));
+        if (msg.indexOf(aTrouver.key) !== -1) {
+            afficherMessage({from: null, to: currentUser, text: "La réponse est proche", date: Date.now()});
         }
     }
 
-    function playRandomSond() {
+    function playRandomSondError() {
         var rand = Math.random();
         var audio = null;
 
@@ -209,7 +210,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             audio = new Audio('./ressources/son_des_enfers/MOTUS_BOULE_NOIR.mp3');
             audio.play();
         }
-
     }
 
 
@@ -218,6 +218,23 @@ document.addEventListener("DOMContentLoaded", function (_e) {
      */
     function quitter() {
         currentUser = null;
+        timeServer = 0;
+        timer = 0;
+        aTrouverChoix = false;
+        aTrouver = false;
+        essai = 0;
+        estGagnant = false;
+        room = null;
+        isHelped = false;
+        isDessinateur = false;
+        score = null;
+        ready = false;
+        timer = false;
+
+        roomJoin = null;
+        document.querySelector("main").innerHTML = "";
+        document.getElementById('liste').innerHTML = '';
+        document.getElementById('liste').innerHTML = '';
         document.getElementById("chat").hidden = true;
         document.getElementById("log_in").hidden = false;
         document.getElementById("timer").hidden = true;
@@ -302,10 +319,10 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     document.getElementById("btnRoom").addEventListener("click", function () {
         room = document.getElementById("roomName").value;
-        if(room===null){
+        if (room === null) {
             return;
         }
-        if(room===""){
+        if (room === "") {
             return;
         }
         document.getElementById("room").hidden = true;
@@ -339,16 +356,16 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         if (currentUser == data[1]) {
             audio = new Audio('./ressources/son_des_enfers/zelaNotif.mp3');
             audio.play();
-            roomJoin=data[2];
+            roomJoin = data[2];
             document.getElementById("invitationBlock").hidden = false;
 
-            document.getElementById("nomInvit").innerHTML+= "<span>" + data[0]+ "</span>";
+            document.getElementById("nomInvit").innerHTML += "<span>" + data[0] + "</span>";
         }
     });
 
 
-    function rejoindre(){
-        var name=currentUser;
+    function rejoindre() {
+        var name = currentUser;
         sock.emit("joinRoom", roomJoin);
         sock.emit("logout");
         sock.emit("login", name);
@@ -356,6 +373,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("menu").hidden = true;
 
     }
+
     // **********************************
     //          Module de dessin
     //***********************************
@@ -596,7 +614,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         });
 
         keysSorted.forEach(function (data) {
-            document.getElementById("classement").innerHTML += data + ' : ' + listeScore[data] + "points"+'<br>';
+            document.getElementById("classement").innerHTML += data + ' : ' + listeScore[data] + "points" + '<br>';
         });
 
         document.getElementById("btnQuitter").addEventListener("click", quitter);
@@ -719,6 +737,8 @@ function afficherTrucATrouver() {
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
 
         document.getElementById("aide").hidden = true;
+        sock.emit("aide_point", currentUser),
+            isHelped = false;
     })
 }
 
@@ -730,7 +750,7 @@ function updateListe(listeScore) {
     });
     keysSorted.forEach(function (data) {
         console.log(data + "\t" + listeScore.data + '\t' + listeScore[data]);
-        document.querySelector("aside").innerHTML += data + ' : ' + listeScore[data] + "pts"+ '<br>';
+        document.querySelector("aside").innerHTML += data + ' : ' + listeScore[data] + "pts" + '<br>';
     });
 }
 
@@ -745,7 +765,6 @@ sock.on('score', function (data) {
     console.log("SCORE");
     console.log(score);
     updateListe(score);
-
 });
 
 
