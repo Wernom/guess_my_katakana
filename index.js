@@ -214,6 +214,7 @@ io.on('connection', function (socket) {
             console.log("AAAAAAAAAAAAAAAAAA"+target);
            clients[target].emit('invitation',data);
     });
+
     /**
      *  Gestion des déconnexions
      */

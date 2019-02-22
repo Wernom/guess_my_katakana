@@ -15,6 +15,7 @@ var timeServer;
 var score = null;
 var ready = false;
 var timer = false;
+var roomJoin;
 // on attache les événements que si le client est œcté.
 sock.on("bienvenue", function (id) {
     if (currentUser === id) {
@@ -285,6 +286,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     document.getElementById("btnEnvoyer").addEventListener("click", envoyer);
     document.getElementById("btnRechercher").addEventListener("click", rechercher);
     document.getElementById("btnInviter").addEventListener("click", inviter);
+    document.getElementById("join").addEventListener("click", rejoindre);
     document.getElementById("recherche").addEventListener("keydown", function (e) {
         if (e.keyCode === 13) {
             rechercher();
@@ -330,10 +332,17 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         if (currentUser == data[1]) {
             audio = new Audio('./ressources/son_des_enfers/zelaNotif.mp3');
             audio.play();
+            roomJoin=data[2];
             document.getElementById("invitationBlock").hidden = false;
             document.getElementById("nomInvit").innerHTML+= "<span>" + data[0]+ "</span>";
         }
     });
+
+
+    function rejoindre(){
+        sock.emit("joinRoom",roomJoin);
+
+    }
     // **********************************
     //          Module de dessin
     //***********************************
