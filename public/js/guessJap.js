@@ -223,6 +223,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("timer").hidden = true;
         document.getElementById("listBloc").hidden = true;
         document.getElementById("screen_score").hidden = true;
+        document.getElementById("menu").hidden = true;
         sock.emit("logout");
     }
 
@@ -301,6 +302,12 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     document.getElementById("btnRoom").addEventListener("click", function () {
         room = document.getElementById("roomName").value;
+        if(room===null){
+            return;
+        }
+        if(room===""){
+            return;
+        }
         document.getElementById("room").hidden = true;
         document.getElementById("chat").hidden = false;
         document.getElementById("timer").hidden = false;
@@ -345,6 +352,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         sock.emit("joinRoom", roomJoin);
         sock.emit("logout");
         sock.emit("login", name);
+        document.getElementById("invitationBlock").hidden = true;
         document.getElementById("menu").hidden = true;
 
     }

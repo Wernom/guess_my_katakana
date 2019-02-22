@@ -50,8 +50,8 @@
 #options {
     font-family: 'Yanone Kaffeesatz', sans-serif;
 font-size:25px;
-    --bg-color: 212121;
-    --fg-color: white;
+    --bg-color: white;
+    --fg-color:#212121 ;
     position: fixed;
     height: auto;
     top: 50%;
@@ -91,18 +91,21 @@ font-size:25px;
 
 #options .bouton {
     display: inline-block;
-    border: solid 1px white;
+    color:#212121;
+    border: solid 2px #212121;
     padding: 1vh 2vh;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
     text-align: center;
     width: auto;
-    box-shadow: 0px 0px 5px white;
+    background-color: white;
+    opacity: 0.7;
+   align-content: center;
+
 }
 
 #options .bouton:hover {
-    color: var(--bg-color);
-    background-color: var(--fg-color);
+    opacity: 1;
 }
 input[type=range] {
     height: 32px;
@@ -195,5 +198,10 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #close_menu{
-    margin-left: 50%;
+    border:#212121 solid 2px;
+    opacity: 0.7;
+
+}
+#close_menu:hover{
+    background-color: white;
 }
