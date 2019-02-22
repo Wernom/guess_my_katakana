@@ -673,7 +673,7 @@ sock.on('next_turn2', function (data) {
     estGagnant = false;
     isHelped = false;
     isDessinateur = false;
-
+    timeLeft=0;
     document.getElementById("choix").hidden = true;
 });
 
