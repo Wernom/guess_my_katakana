@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
 
         if (msg === aTrouver.key && !estGagnant && !isDessinateur) {    //bonne réponse
-            sock.emit("trouvé", essai);
+            sock.emit("trouvé", [essai,timeServer]);
             estGagnant = true;
         } else if (msg.length < 3) {
             essai++;

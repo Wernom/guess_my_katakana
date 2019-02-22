@@ -296,8 +296,8 @@ io.on('connection', function (socket) {
         io.sockets.in(room).emit("printFind", glyph[room])
     });
 
-    socket.on("trouvé", function (essai) {
-        score[room][currentID] += baseScore/(essai+1);
+    socket.on("trouvé", function (data) {
+        score[room][currentID] += baseScore/(data[0]+1);
         console.log("SCORE");
         console.log(score[room]);
         console.log(score[room][currentID]);
@@ -326,7 +326,8 @@ io.on('connection', function (socket) {
         console.log("pasTrouve: " + pas_trouve[room].length);
         if (pas_trouve[room].length === 1) {
             io.sockets.in(room).emit("dessinateurPlusPoint", nbClientInRoom[room]);
-            nextTurn(room);
+
+            nextTurn(room,data[1]);
         }
         io.sockets.in(room).emit("score", score[room]);
 
