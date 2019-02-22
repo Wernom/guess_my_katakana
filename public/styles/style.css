@@ -328,7 +328,7 @@ html {
     position: absolute;
     left: 50%;
     top: 50%;
-    background: darkgrey;
+    background: #212121;
     border: solid 1px #333;
     box-shadow: 10px 10px 10px #000;
     border-radius: 5px;
@@ -338,14 +338,38 @@ html {
     width: calc(100% - 120px);
 }
 #bcImage #btnFermer {
+    font-family: 'Yanone Kaffeesatz', sans-serif;
     position: absolute;
-    bottom: 10px;
+    background-color: #212121;
+    border-radius: 5px;
+    border:white solid 2px;
     left: 50%;
+    color:white;
+    bottom: -10px;
     transform: translateX(-50%);
 }
+
+#bcImage #recherche{
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    background-color: #212121;
+    border-radius: 5px;
+    border:white solid 2px;
+    left: 50%;
+    color:white;
+}
+
+#bcImage #btnRechercher{
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    background-color: #212121;
+    border-radius: 5px;
+    border:white solid 2px;
+    left: 50%;
+    color:white;
+}
+
 #bcImage #bcResults {
     height: calc(100% - 80px);
-    background-color: white;
+    background-color: #212121;
     overflow: scroll;
 }
 #bcImage #bcResults {
