@@ -112,6 +112,8 @@ io.on('connection', function (socket) {
         socket.join(room);
     });
 
+
+
     /**
      *  Doit être la première action après la connexion.
      *  @param  id  string  l'identifiant saisi par le client
@@ -215,6 +217,10 @@ io.on('connection', function (socket) {
            clients[target].emit('invitation',data);
     });
 
+    socket.on("aide_point",function(data){
+        score[room][data] -=2;
+        io.sockets.in(room).emit("score", score[room]);
+    });
     /**
      *  Gestion des déconnexions
      */

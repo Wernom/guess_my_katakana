@@ -709,14 +709,18 @@ function afficherChoix() {
 
 function choix(key) {
     sock.emit("find", aTrouverChoix[key]);
+    document.getElementById("aide").hidden = false;
 }
 
 function afficherTrucATrouver() {
     document.getElementById("glyph").innerHTML = aTrouver.key;
-    document.getElementById("choix").innerHTML += "<p id='aide'>?</p>";
     document.getElementById('aide').addEventListener('click', function () {
         isHelped = true;
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
+
+        document.getElementById("aide").hidden = true;
+        sock.emit("aide_point",currentUser),
+        isHelped=false;
     })
 }
 
