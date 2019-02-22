@@ -109,6 +109,37 @@ io.on('connection', function (socket) {
             socket.emit('dessin');
         }
 
+        if (isEmpty(pasEncoreDessinateur[room])) {
+            pasEncoreDessinateur[room] = [];
+        }
+
+        if (isEmpty(pas_trouve[room])) {
+            pas_trouve[room] = [];
+        }
+
+        if (isEmpty(trouve[room])) {
+            trouve[room] = [];
+        }
+
+
+
+        if (isEmpty(score[room])) {
+            score[room] = {};
+        }
+
+        if (isEmpty(nbClientInRoom[room])) {
+            nbClientInRoom[room] = 0;
+        }
+
+        rooms[room][currentID] = socket;
+        score[room][currentID] = 0;
+        pasEncoreDessinateur[room].push(currentID);
+        pas_trouve[room].push(currentID);
+        console.log("INIT SCORE");
+        console.log(score);
+        nbClientInRoom[room]++;
+
+
         socket.join(room);
     });
 
@@ -122,41 +153,13 @@ io.on('connection', function (socket) {
             id = id + "(1)";
         }
 
-        if (isEmpty(pasEncoreDessinateur[room])) {
-            pasEncoreDessinateur[room] = [];
-        }
-
-        if (isEmpty(pas_trouve[room])) {
-            pas_trouve[room] = [];
-        }
-
-        if (isEmpty(trouve[room])) {
-            trouve[room] = [];
-        }
-
         console.log(glyph[room]);
         if (!isEmpty(glyph[room])) {
             socket.emit("printFind", glyph[room]);
         }
 
-        if (isEmpty(score[room])) {
-            score[room] = {};
-        }
-
-        if (isEmpty(nbClientInRoom[room])) {
-            nbClientInRoom[room] = 0;
-        }
-
-
         currentID = id;
         clients[currentID] = socket;
-        rooms[room][currentID] = socket;
-        pasEncoreDessinateur[room].push(currentID);
-        pas_trouve[room].push(currentID);
-        score[room][currentID] = 0;
-        console.log("INIT SCORE");
-        console.log(score);
-        nbClientInRoom[room]++;
 
         console.log("Nouvel utilisateur : " + currentID);
         // envoi d'un message de bienvenue à ce client
@@ -239,7 +242,7 @@ io.on('connection', function (socket) {
                 delete glyph[room];
             }
             // envoi de la nouvelle liste pour mise à jour
-            io.sockets.in(room).emit("liste", Objet.keys(clients));
+            io.sockets.in(room).emit("liste", Object.keys(clients));
         }
     });
 

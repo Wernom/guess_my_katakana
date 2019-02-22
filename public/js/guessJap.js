@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         if (!user) return;
         currentUser = user;
         console.log(user);
-
+        sock.emit("login", currentUser);
     }
 
 
@@ -331,7 +331,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
         document.getElementById("listBloc").hidden = false;
         sock.emit("joinRoom", room);
-        sock.emit("login", currentUser);
     });
 
     sock.on('dessin', function () {
