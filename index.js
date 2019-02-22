@@ -326,9 +326,9 @@ io.on('connection', function (socket) {
 
     });
 
-    socket.on('plusDessinateur', function (malus) {
+    socket.on('plusDessinateur', function (isHelped) {
 
-        if (malus) {
+        if (isHelped) {
             score[room][currentID] += (baseScore + nbClientInRoom[room]) / 2;
             io.sockets.in(room).emit("score", score[room]);
         } else {

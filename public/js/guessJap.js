@@ -754,9 +754,9 @@ function updateListe(listeScore) {
     });
 }
 
-sock.on('dessinateurPlusPoint', function (nbClient) {
+sock.on('dessinateurPlusPoint', function () {
     if (isDessinateur) {
-        sock.emit('plusDessinateur',isHelped);
+        sock.emit('plusDessinateur', isHelped);
     }
 });
 
