@@ -60,7 +60,7 @@ function nextTurn(room,timer) {
         console.log(nbRound[room]);
         if (nbRound[room] <= currRound[room]) {
             console.log('FIN PARTIE');
-            io.sockets.in(room).emit("end");
+            io.sockets.in(room).emit("end",score[room]);
             return;
         } else {
             pas_trouve[room].forEach(function (data) {
@@ -111,6 +111,8 @@ io.on('connection', function (socket) {
 
         socket.join(room);
     });
+
+
 
     /**
      *  Doit être la première action après la connexion.
@@ -215,6 +217,10 @@ io.on('connection', function (socket) {
            clients[target].emit('invitation',data);
     });
 
+    socket.on("aide_point",function(data){
+        score[room][data] -=2;
+        io.sockets.in(room).emit("score", score[room]);
+    });
     /**
      *  Gestion des déconnexions
      */

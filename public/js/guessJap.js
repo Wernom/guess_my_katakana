@@ -222,6 +222,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("timer").hidden = true;
         document.getElementById("listBloc").hidden = true;
         document.getElementById("screen_score").hidden = true;
+        document.getElementById("menu").hidden = true;
         sock.emit("logout");
     }
 
@@ -300,6 +301,12 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     document.getElementById("btnRoom").addEventListener("click", function () {
         room = document.getElementById("roomName").value;
+        if(room===null){
+            return;
+        }
+        if(room===""){
+            return;
+        }
         document.getElementById("room").hidden = true;
         document.getElementById("chat").hidden = false;
         document.getElementById("timer").hidden = false;
@@ -344,6 +351,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         sock.emit("joinRoom", roomJoin);
         sock.emit("logout");
         sock.emit("login", name);
+        document.getElementById("invitationBlock").hidden = true;
         document.getElementById("menu").hidden = true;
 
     }
@@ -572,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     }
 
 
-    sock.on("end", function (score) {
+    sock.on("end", function (listeScore) {
         document.getElementById("screen_score").hidden = false;
 
         document.getElementById("choix").hidden = true;
@@ -587,7 +595,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         });
 
         keysSorted.forEach(function (data) {
-            document.getElementById("screen_score").innerHTML += data + ' - ' + listeScore[data] + '<br>';
+            document.getElementById("classement").innerHTML += data + ' : ' + listeScore[data] + "points"+'<br>';
         });
 
         document.getElementById("btnQuitter").addEventListener("click", quitter);
@@ -700,14 +708,18 @@ function afficherChoix() {
 
 function choix(key) {
     sock.emit("find", aTrouverChoix[key]);
+    document.getElementById("aide").hidden = false;
 }
 
 function afficherTrucATrouver() {
     document.getElementById("glyph").innerHTML = aTrouver.key;
-    document.getElementById("choix").innerHTML += "<p id='aide'>?</p>";
     document.getElementById('aide').addEventListener('click', function () {
         isHelped = true;
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
+
+        document.getElementById("aide").hidden = true;
+        sock.emit("aide_point",currentUser),
+        isHelped=false;
     })
 }
 
@@ -719,7 +731,7 @@ function updateListe(listeScore) {
     });
     keysSorted.forEach(function (data) {
         console.log(data + "\t" + listeScore.data + '\t' + listeScore[data]);
-        document.querySelector("aside").innerHTML += data + ' - ' + listeScore[data] + '<br>';
+        document.querySelector("aside").innerHTML += data + ' : ' + listeScore[data] + "pts"+ '<br>';
     });
 }
 
