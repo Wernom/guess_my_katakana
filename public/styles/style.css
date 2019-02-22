@@ -644,10 +644,10 @@ html {
     border-bottom: 50px solid #c0392b;
     border-left: 25px solid transparent;
     border-right: 25px solid transparent;
-    width: auto;
+    width: 50%;
     height: 2%;
     position: absolute;
-
+    left:25%;
     top: 94.7%;
     color: white;
 }

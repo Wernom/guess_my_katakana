@@ -334,6 +334,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             audio.play();
             roomJoin=data[2];
             document.getElementById("invitationBlock").hidden = false;
+
             document.getElementById("nomInvit").innerHTML+= "<span>" + data[0]+ "</span>";
         }
     });
@@ -341,6 +342,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     function rejoindre(){
         sock.emit("joinRoom",roomJoin);
+        document.getElementById("menu").hidden = true;
 
     }
     // **********************************
