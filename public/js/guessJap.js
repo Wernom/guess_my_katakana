@@ -13,8 +13,8 @@ var isDessinateur = false;
 var score = 0;
 var timeServer;
 var score = null;
-var ready=false;
-var timer=false;
+var ready = false;
+var timer = false;
 // on attache les événements que si le client est œcté.
 sock.on("bienvenue", function (id) {
     if (currentUser === id) {
@@ -171,13 +171,13 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("monMessage").value = "";
     }
 
-    function help(msg){
+    function help(msg) {
 
         console.log("HELP");
         console.log(aTrouver.key.length);
         console.log(typeof aTrouver.key);
-        for (let i = 0; i < aTrouver.key.length; ++i){
-            if (msg.indexOf(aTrouver.key.charAt(i))){
+        for (let i = 0; i < aTrouver.key.length; ++i) {
+            if (msg.indexOf(aTrouver.key.charAt(i))) {
                 afficherMessage({from: null, to: currentUser, text: "La réponse est proche", date: Date.now()});
                 break;
             }
@@ -204,14 +204,12 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             //play GladOS
             audio = new Audio('./ressources/son_des_enfers/nulite.wav');
             audio.play();
-        }else if (rand >= 4 / 8 && rand < 5 / 8){
+        } else if (rand >= 4 / 8 && rand < 5 / 8) {
             audio = new Audio('./ressources/son_des_enfers/MOTUS_BOULE_NOIR.mp3');
             audio.play();
         }
 
     }
-
-
 
 
     /**
@@ -286,6 +284,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     document.getElementById("btnImage").addEventListener("click", toggleImage);
     document.getElementById("btnEnvoyer").addEventListener("click", envoyer);
     document.getElementById("btnRechercher").addEventListener("click", rechercher);
+    document.getElementById("btnInviter").addEventListener("click", inviter);
     document.getElementById("recherche").addEventListener("keydown", function (e) {
         if (e.keyCode === 13) {
             rechercher();
@@ -321,6 +320,20 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     quitter();
 
 
+    function inviter() {
+        var invitTarget = document.getElementById("InvitationSender").value;
+        sock.emit("send_invit", [currentUser, invitTarget, room]);
+    }
+
+    sock.on("invitation", function (data) {
+
+        if (currentUser == data[1]) {
+            audio = new Audio('./ressources/son_des_enfers/zelaNotif.mp3');
+            audio.play();
+            document.getElementById("invitationBlock").hidden = false;
+            document.getElementById("nomInvit").innerHTML+= "<span>" + data[0]+ "</span>";
+        }
+    });
     // **********************************
     //          Module de dessin
     //***********************************
@@ -624,14 +637,14 @@ sock.on('next_turn2', function (data) {
     document.getElementById("choix").hidden = true;
 });
 
-sock.on('readyTurn',function(data){
-    ready=data;
+sock.on('readyTurn', function (data) {
+    ready = data;
     essai = 0;
 });
 
-sock.on('initGame',function(data){
-    timeServer=data;
-    console.log("TIMESERVER:"+timeServer);
+sock.on('initGame', function (data) {
+    timeServer = data;
+    console.log("TIMESERVER:" + timeServer);
 });
 
 sock.on('dessinateur', function () {
@@ -788,19 +801,20 @@ function playRandomSondTime() {
         //play full metal jacket1
         audio = new Audio('./ressources/son_des_enfers/temps.mp3');
         audio.play();
-    }else if (rand >= 4 / 8 && rand < 5 / 8){
+    } else if (rand >= 4 / 8 && rand < 5 / 8) {
         audio = new Audio('./ressources/son_des_enfers/comique.mp3');
         audio.play();
     }
 
 }
+
 var timeLeft;
 
 function StartTimer(length) {
-    timer=true;
+    timer = true;
     timeLeft = timeServer;
-    console.log("TIMER:"+timeLeft);
-    console.log("TIMER2:"+timeServer);
+    console.log("TIMER:" + timeLeft);
+    console.log("TIMER2:" + timeServer);
     setInterval("Tick(length)", 1000);
 
     var seconds = timeLeft % 60;
@@ -814,13 +828,13 @@ function StartTimer(length) {
 
 
 function Tick(length) {
-    if(timeLeft==7){
+    if (timeLeft == 7) {
         playRandomSondTime();
     }
     if (timeLeft <= 0) {
-        if(ready) {
+        if (ready) {
             changeTurn(timeServer);
-            timeLeft=0;
+            timeLeft = 0;
         }
         return;
     } else {
@@ -842,18 +856,17 @@ function changeTurn(length) {
 }
 
 function beginTurn() {
-        sock.emit("beginTurn", [timeServer,true]);
+    sock.emit("beginTurn", [timeServer, true]);
 
 }
 
 sock.on('launchTurn', function (data) {
-    if(timer){
-        ready=data[1];
-        console.log("READY?"+ready);
+    if (timer) {
+        ready = data[1];
+        console.log("READY?" + ready);
         timeLeft = data[0];
         timeServer = data[0];
-    }
-    else {
+    } else {
         ready = data[1];
         console.log("READY?" + ready);
         timeLeft = data[0];
@@ -862,7 +875,7 @@ sock.on('launchTurn', function (data) {
     }
 });
 
-function sendTimer(){
-    console.log('aaaaaaaaaaaa:'+parseInt((document.getElementById('roundLength').value)));
+function sendTimer() {
+    console.log('aaaaaaaaaaaa:' + parseInt((document.getElementById('roundLength').value)));
     sock.emit("beginGame", parseInt((document.getElementById('roundLength').value)));
 }
