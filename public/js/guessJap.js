@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         } else if (msg.length < 3) {
             essai++;
             help(msg);
-            playRandomSond();
+            playRandomSondError();
 
             if (essai >= 2) {
                 afficherMessage({from: null, to: currentUser, text: "C'est perdu !!!!!!", date: Date.now()});
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         }
     }
 
-    function playRandomSond() {
+    function playRandomSondError() {
         var rand = Math.random();
         var audio = null;
 
@@ -207,7 +207,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             audio = new Audio('./ressources/son_des_enfers/MOTUS_BOULE_NOIR.mp3');
             audio.play();
         }
-
     }
 
 
