@@ -558,3 +558,57 @@ html {
     margin-top: 60px;
     margin-bottom: -85px;
 }
+
+#screen_score{
+    text-align: center;
+}
+#score_block{
+    padding: 5px;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 25px;
+    width: 40%;
+    margin-left: 30%;
+    margin-top: 2%;
+    background-color: #c0392b;
+    border-radius: 10px;
+    height: auto;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+#classement{
+    background-color: #212121;
+    border:white solid 2px;
+    border-radius: 5px;
+    color: white;
+    width: 90%;
+    margin: 5%;
+    font-size: 25px;
+    align-content: center;
+    text-align: center;
+
+}
+#leave{
+    margin: 10px;
+    font-size: 35px;
+    background-color: #c0392b;
+    color: white;
+    border-radius: 5px;
+    border:white solid 2px;
+    opacity: 0.7;
+}
+#leave:hover{
+    opacity: 1;
+}
+
+#nameLogoScore{
+    margin-top: 20px;
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+#titreScore{
+    color: white;
+    font-size: 32px;
+}

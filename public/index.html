@@ -114,7 +114,6 @@
         <H2>Options</H2>
 
 
-
         <div>
             <p>Alphabet :</p>
             <label><input type="radio" name="radGlyphe" value="hiragana" checked> hiragana</label>
@@ -155,18 +154,20 @@
         </div>
         <div>
             <p>Durée d'un round (en secondes):</p>
-            <input id="roundLength" type="range" min="15" max="60" value="15" oninput="document.getElementById('AfficheRangeTime').textContent=value" />
+            <input id="roundLength" type="range" min="15" max="60" value="15"
+                   oninput="document.getElementById('AfficheRangeTime').textContent=value"/>
             <span id="AfficheRangeTime">15  </span>
         </div>
         <div>
             <p>Nombre de rounds : </p>
-            <input id="round" type="range" min="1" max="15" value="1" oninput="document.getElementById('AfficheRangeNumber').textContent=value" />
+            <input id="round" type="range" min="1" max="15" value="1"
+                   oninput="document.getElementById('AfficheRangeNumber').textContent=value"/>
             <span id="AfficheRangeNumber">1</span>
         </div>
 
 
         <div>
-            <label id="close_menu" class="bouton" onclick="sendTimer()" >Lancer la partie</label>
+            <label id="close_menu" class="bouton" onclick="sendTimer()">Lancer la partie</label>
         </div>
     </form>
 </div>
@@ -203,10 +204,15 @@
     </div>
 </div>
 
+<!--Page score-->
+<div id="screen_score" hidden>
+    <img id="nameLogoScore" src="./ressources/GMK1.png" alt="Logo">
 
-<div id="screen_score">
-    <div id="classement"></div>
-    <input type="button" value="Quitter">
+    <div id="score_block">
+        <span id="titreScore">Tableau des scores:</span>
+        <div id="classement">JAck-3<br>John-2<br>JAck-3<br>John-2<br>JAck-3<br>John-2<br></br.></div>
+        <input type="button" id="leave" value="Quitter">
+    </div>
 </div>
 
 <!-- Optional JavaScript -->

@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("log_in").hidden = true;
         document.getElementById("timer").hidden = true;
         document.getElementById("room").hidden = false;
+        document.getElementById("screen_score").hidden = true;
         if (!user) return;
         currentUser = user;
         console.log(user);
@@ -222,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("log_in").hidden = false;
         document.getElementById("timer").hidden = true;
         document.getElementById("listBloc").hidden = true;
-        document.getElementById("screen_score").hidden = false;
+        document.getElementById("screen_score").hidden = true;
         sock.emit("logout");
     }
 
@@ -280,6 +281,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
      */
     document.getElementById("btnConnecter").addEventListener("click", connect);
     document.getElementById("btnQuitter").addEventListener("click", quitter);
+    document.getElementById("leave").addEventListener("click", quitter);
     document.getElementById("btnFermer").addEventListener("click", toggleImage);
     document.getElementById("btnImage").addEventListener("click", toggleImage);
     document.getElementById("btnEnvoyer").addEventListener("click", envoyer);
@@ -563,6 +565,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         });
 
         document.getElementById("btnQuitter").addEventListener("click", quitter);
+
 
         sock.emit("logout");
         //afficher écran des cores.
