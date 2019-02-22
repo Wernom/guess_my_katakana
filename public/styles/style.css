@@ -328,7 +328,7 @@ html {
     position: absolute;
     left: 50%;
     top: 50%;
-    background: darkgrey;
+    background: #212121;
     border: solid 1px #333;
     box-shadow: 10px 10px 10px #000;
     border-radius: 5px;
@@ -338,14 +338,38 @@ html {
     width: calc(100% - 120px);
 }
 #bcImage #btnFermer {
+    font-family: 'Yanone Kaffeesatz', sans-serif;
     position: absolute;
-    bottom: 10px;
+    background-color: #212121;
+    border-radius: 5px;
+    border:white solid 2px;
     left: 50%;
+    color:white;
+    bottom: -10px;
     transform: translateX(-50%);
 }
+
+#bcImage #recherche{
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    background-color: #212121;
+    border-radius: 5px;
+    border:white solid 2px;
+    left: 50%;
+    color:white;
+}
+
+#bcImage #btnRechercher{
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    background-color: #212121;
+    border-radius: 5px;
+    border:white solid 2px;
+    left: 50%;
+    color:white;
+}
+
 #bcImage #bcResults {
     height: calc(100% - 80px);
-    background-color: white;
+    background-color: #212121;
     overflow: scroll;
 }
 #bcImage #bcResults {
@@ -557,4 +581,91 @@ html {
     line-height: 1;
     margin-top: 60px;
     margin-bottom: -85px;
+}
+
+#screen_score{
+    text-align: center;
+}
+#score_block{
+    padding: 5px;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 25px;
+    width: 40%;
+    margin-left: 30%;
+    margin-top: 2%;
+    background-color: #c0392b;
+    border-radius: 10px;
+    height: auto;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+#classement{
+    background-color: #212121;
+    border:white solid 2px;
+    border-radius: 5px;
+    color: white;
+    width: 90%;
+    margin: 5%;
+    font-size: 25px;
+    align-content: center;
+    text-align: center;
+
+}
+#leave{
+    margin: 10px;
+    font-size: 35px;
+    background-color: #c0392b;
+    color: white;
+    border-radius: 5px;
+    border:white solid 2px;
+    opacity: 0.7;
+}
+#leave:hover{
+    opacity: 1;
+}
+
+#nameLogoScore{
+    margin-top: 20px;
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+#titreScore{
+    color: white;
+    font-size: 32px;
+}
+
+#invitationBlock{
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 25px;
+    text-align: center;
+    border-bottom: 50px solid #c0392b;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    width: 50%;
+    height: 2%;
+    position: absolute;
+    left:25%;
+    top: 94.7%;
+    color: white;
+}
+
+#messageInvit,#nomInvit{
+    margin-top:1%;
+}
+#join{
+    color:white;
+    border-radius: 5px;
+    background-color: #c0392b;
+    margin-left:25%;
+    font-size: 20px;
+    border: white 2px solid;
+    opacity:0.7;
+}
+
+
+#join{
+    opacity: 1;
 }

@@ -185,6 +185,7 @@ io.on('connection', function (socket) {
         // si message privé, envoi seulement au destinataire
         if (msg.to != null && clients[msg.to] !== undefined) {
             console.log(" --> message privé");
+            console.log( clients[msg.to]);
             clients[msg.to].emit("message", msg);
             if (msg.from != msg.to) {
                 socket.emit("message", msg);
@@ -206,6 +207,14 @@ io.on('connection', function (socket) {
     socket.on('beginGame',function(data){
         io.sockets.in(room).emit('initGame',data);
     });
+
+    socket.on('send_invit',function(data){
+            console.log("AAAAAAAAAAAAAAAAAA"+data[1]);
+            var target=data[1];
+            console.log("AAAAAAAAAAAAAAAAAA"+target);
+           clients[target].emit('invitation',data);
+    });
+
     /**
      *  Gestion des déconnexions
      */
