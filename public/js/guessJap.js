@@ -368,8 +368,17 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         sock.emit("joinRoom", roomJoin);
         sock.emit("logout");
         sock.emit("login", name);
-        document.getElementById("invitationBlock").hidden = true;
+        document.querySelector("main").innerHTML = "";
+        document.getElementById('liste').innerHTML = '';
+        document.getElementById('liste').innerHTML = '';
+        document.getElementById("chat").hidden = false;
+        document.getElementById("log_in").hidden = true;
+        document.getElementById("timer").hidden = false;
+        document.getElementById("listBloc").hidden = false;
+        document.getElementById("screen_score").hidden = true;
         document.getElementById("menu").hidden = true;
+        document.getElementById("invitationBlock").hidden = true;
+        document.getElementById("room").hidden = true;
 
     }
 
