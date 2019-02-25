@@ -141,6 +141,21 @@ io.on('connection', function (socket) {
 
 
         socket.join(room);
+
+        console.log("Nouvel utilisateur : " + currentID);
+        // envoi d'un message de bienvenue à ce client
+        console.log(room);
+        socket.in(room).emit("bienvenue", currentID);
+        // envoi aux autres clients
+        socket.in(room).emit("message", {
+            from: null,
+            to: null,
+            text: currentID + " a rejoint la discussion",
+            date: Date.now()
+        });
+
+        console.log("SOCORE");
+        io.sockets.in(room).emit("liste", score[room]);
     });
 
 
@@ -161,19 +176,8 @@ io.on('connection', function (socket) {
         currentID = id;
         clients[currentID] = socket;
 
-        console.log("Nouvel utilisateur : " + currentID);
-        // envoi d'un message de bienvenue à ce client
-        console.log(room);
-        socket.in(room).emit("bienvenue", id);
-        // envoi aux autres clients 
-        socket.in(room).emit("message", {
-            from: null,
-            to: null,
-            text: currentID + " a rejoint la discussion",
-            date: Date.now()
-        });
-        // envoi de la nouvelle liste à tous les clients connectés 
-        io.sockets.in(room).emit("liste", score[room]);
+
+
     });
 
     /**
@@ -190,7 +194,7 @@ io.on('connection', function (socket) {
             console.log(clients[msg.to]);
             clients[msg.to].emit("message", msg);
             if (msg.from != msg.to) {
-                socket.emit("message", msg);
+                io.sockets.in(room).emit("message", msg);
             }
         } else {
             console.log(" --> broadcast");
@@ -211,10 +215,10 @@ io.on('connection', function (socket) {
     });
 
     socket.on('send_invit', function (data) {
-        console.log("AAAAAAAAAAAAAAAAAA" + data[1]);
         var target = data[1];
-        console.log("AAAAAAAAAAAAAAAAAA" + target);
-        clients[target].emit('invitation', data);
+        if(clients[target]){
+            clients[target].emit('invitation', data);
+        }
     });
 
     /**
@@ -227,13 +231,14 @@ io.on('connection', function (socket) {
         if (currentID && rooms[room]) {
             console.log("Sortie de l'utilisateur " + currentID);
             // envoi de l'information de déconnexion
-            socket.broadcast.emit("message",
+            io.sockets.in(room).emit("message",
                 {from: null, to: null, text: currentID + " a quitté la discussion", date: Date.now()});
             // suppression de l'entrée
             delete clients[currentID];
             delete rooms[room][currentID];
             delete pasEncoreDessinateur[room][currentID];
             delete pas_trouve[room][currentID];
+            delete score[room][currentID];
 
             //on suprime le salon quand plus personne n'est dedans
             if (isEmpty(rooms[room])) {
@@ -242,7 +247,7 @@ io.on('connection', function (socket) {
                 delete glyph[room];
             }
             // envoi de la nouvelle liste pour mise à jour
-            io.sockets.in(room).emit("liste", Object.keys(clients));
+            io.sockets.in(room).emit("liste", score[room]);
         }
     });
 
@@ -251,7 +256,7 @@ io.on('connection', function (socket) {
         // si client était identifié
         if (currentID && rooms[room]) {
             // envoi de l'information de déconnexion
-            socket.broadcast.emit("message",
+            io.sockets.in(room).emit("message",
                 {
                     from: null,
                     to: null,
@@ -263,6 +268,7 @@ io.on('connection', function (socket) {
             delete rooms[room][currentID];
             delete pasEncoreDessinateur[room][currentID];
             delete pas_trouve[room][currentID];
+            delete score[room][currentID];
 
             //on suprime le salon quand plus personne n'est dedans
             if (isEmpty(rooms[room])) {
@@ -345,7 +351,6 @@ io.on('connection', function (socket) {
         if (isEmpty(nbRound[room])) {
             nbRound[room] = Number(round);
         }
-
         currRound[room] = 0;
         nextTurn(room);
     });

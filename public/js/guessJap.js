@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     });
 
     sock.on("liste", function (liste) {
+        console.log("LISTE");
         if (currentUser) {
             updateListe(liste);
         }
@@ -352,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     sock.on("invitation", function (data) {
 
-        if (currentUser == data[1]) {
+        if (currentUser === data[1]) {
             audio = new Audio('./ressources/son_des_enfers/zelaNotif.mp3');
             audio.play();
             roomJoin = data[2];
@@ -426,18 +427,21 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             act(currentCommand.move, e);
         }
     });
+
     overlay.addEventListener("mousedown", function (e) {
         if (isDessinateur) {
             sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mousedown"});
             act(currentCommand.down, e);
         }
     });
+
     overlay.addEventListener("mouseup", function (e) {
         if (isDessinateur) {
             sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mouseup"});
             act(currentCommand.up, e);
         }
     });
+
     overlay.addEventListener("mouseout", function (e) {
         if (isDessinateur) {
             sock.emit("drawing", {clientX: e.clientX, clientY: e.clientY, action: "mouseout"});
@@ -469,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         // bouton cliqué
         this.isDown = false;
         // fillStyle pour le dessin
-        this.fsBG = "white",
+        this.fsBG = "white";
             // fillStyle pour le calque
             this.fsFG = "white";
         // strokeStyle pour le dessin
@@ -745,14 +749,15 @@ function afficherTrucATrouver() {
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
 
         document.getElementById("aide").hidden = true;
-        sock.emit("aide_point", currentUser),
+        sock.emit("aide_point", currentUser);
             isHelped = false;
     })
 }
 
 function updateListe(listeScore) {
+    console.log("listeScore: ");
+    console.log(listeScore);
     document.querySelector("aside").innerHTML = "";
-    // var list = {"you": 100, "me": 75, "foo": 116, "bar": 15};
     var keysSorted = Object.keys(listeScore).sort(function (a, b) {
         return listeScore[b] - listeScore[a]
     });
@@ -874,7 +879,6 @@ function StartTimer(length) {
     var minutes = Math.floor(timeLeft / 60);
 
     document.getElementById("timer").innerHTML = "" + minutes + ":" + secondsTens + secondsOnes;
-    //alert("" + minutes + ":" + secondsTens + secondsOnes);
 }
 
 
@@ -887,7 +891,6 @@ function Tick(length) {
             changeTurn(timeServer);
             timeLeft = 0;
         }
-        return;
     } else {
         timeLeft--;
         var seconds = timeLeft % 60;
@@ -895,8 +898,6 @@ function Tick(length) {
         var secondsOnes = seconds % 10;
         var minutes = Math.floor(timeLeft / 60);
         document.getElementById("timer").innerHTML = "" + minutes + ":" + secondsTens + secondsOnes;
-        //alert("AAAAAAAA" + minutes + ":" + secondsTens + secondsOnes);
-
     }
 }
 
