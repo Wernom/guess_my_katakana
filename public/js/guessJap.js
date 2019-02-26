@@ -539,62 +539,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
 
     /**
-     *  Commande pour gommer (effacer une zone)
-     *      au survol : affichage d'un rectangle représentant la zone à effacer
-     *      au clic : effacement de la zone
-     */
-    var gommer = new Commande();
-    gommer.ssFG = "black";
-    gommer.effacer = function (x, y) {
-        ctxBG.clearRect(x - 40 / 2, y - 40 / 2, 40, 40);
-    };
-    gommer.move = function (x, y) {
-        this.__proto__.move.call(this, x, y);
-        ctxFG.lineWidth = 1;
-        if (this.isDown) {
-            this.effacer(x, y);
-        }
-        ctxFG.strokeRect(x - 40 / 2, y - 40 / 2, 40, 40);
-    };
-    gommer.down = function (x, y) {
-        this.__proto__.down.call(this, x, y);
-        gommer.effacer(x, y);
-    };
-
-
-    /**
-     *  Commande pour tracer une ligne
-     *      au survol si clic appuyé : ombrage de la ligne entre le point de départ et le point courant.
-     *      au relâchement du clic : tracé de la ligne sur la zone de dessin
-     */
-    var ligne = new Commande();
-    ligne.ssFG = "white";
-    ligne.dessiner = function (ctx, x, y) {
-        ctx.lineWidth = 40;
-        ctx.beginPath();
-        ctx.moveTo(this.startX, this.startY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-    };
-    ligne.move = function (x, y) {
-        this.__proto__.move.call(this, x, y);
-        ctxFG.lineWidth = 40;
-        if (this.isDown) {
-            this.dessiner(ctxFG, x, y);
-        } else tracer.dessiner(ctxFG, x, y);
-    };
-    ligne.down = function (x, y) {
-        this.__proto__.down.call(this, x, y);
-        this.startX = x;
-        this.startY = y;
-    };
-    ligne.up = function (x, y) {
-        this.__proto__.up.call(this, x, y);
-        this.dessiner(ctxBG, x, y);
-    };
-
-
-    /**
      *  Affectation des événements sur les boutons radios
      *  et detection du bouton radio en cours de sélection.
      */
@@ -681,11 +625,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, false);
 }, true);
 
-sock.on('next_turn2', function (data) {
+sock.on('next_turn2', function () {
     estGagnant = false;
     isHelped = false;
     isDessinateur = false;
     timeLeft=0;
+    document.getElementById("new").hidden = true;
     document.getElementById("choix").hidden = true;
 });
 
@@ -704,6 +649,7 @@ sock.on('dessinateur', function () {
     isDessinateur = true;
     console.log("dessinateur");
     document.getElementById("choix").hidden = false;
+    document.getElementById("new").hidden = false;
     afficherChoix();
 });
 

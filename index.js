@@ -239,12 +239,21 @@ io.on('connection', function (socket) {
             delete pasEncoreDessinateur[room][currentID];
             delete pas_trouve[room][currentID];
             delete score[room][currentID];
+            delete trouve[room][currentID];
+            delete nbClientInRoom[room][currentID];
 
             //on suprime le salon quand plus personne n'est dedans
             if (isEmpty(rooms[room])) {
                 console.log(room + ": deleted");
                 delete rooms[room];
                 delete glyph[room];
+                delete nbRound[room];
+                delete currRound[room];
+                delete pasEncoreDessinateur[room];
+                delete pas_trouve[room];
+                delete score[room];
+                delete trouve[room];
+                delete nbClientInRoom[room];
             }
             // envoi de la nouvelle liste pour mise à jour
             io.sockets.in(room).emit("liste", score[room]);
@@ -264,17 +273,27 @@ io.on('connection', function (socket) {
                     date: Date.now()
                 });
             // suppression de l'entrée
+            // suppression de l'entrée
             delete clients[currentID];
             delete rooms[room][currentID];
             delete pasEncoreDessinateur[room][currentID];
             delete pas_trouve[room][currentID];
             delete score[room][currentID];
+            delete trouve[room][currentID];
+            delete nbClientInRoom[room][currentID];
 
             //on suprime le salon quand plus personne n'est dedans
             if (isEmpty(rooms[room])) {
                 console.log(room + ": deleted");
                 delete rooms[room];
                 delete glyph[room];
+                delete nbRound[room];
+                delete currRound[room];
+                delete pasEncoreDessinateur[room];
+                delete pas_trouve[room];
+                delete score[room];
+                delete trouve[room];
+                delete nbClientInRoom[room];
             }
             // envoi de la nouvelle liste pour mise à jour
             io.sockets.in(room).emit("liste", Object.keys(clients));
