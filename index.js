@@ -404,7 +404,7 @@ io.on('connection', function (socket) {
                 nextTurn(room);
             }
             // envoi de la nouvelle liste pour mise à jour
-            io.sockets.in(room).emit("liste", Object.keys(clients));
+            io.sockets.in(room).emit("liste", score[room]);
             socket.leave(room);
 
         }

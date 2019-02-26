@@ -245,34 +245,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         sock.emit("logout");
     }
 
-    function quitterRoom() {
-        timeServer = 0;
-        timer = 0;
-        aTrouverChoix = false;
-        aTrouver = false;
-        essai = 0;
-        estGagnant = false;
-        room = null;
-        isHelped = false;
-        isDessinateur = false;
-        score = null;
-        ready = false;
-        timer = false;
-
-        roomJoin = null;
-        document.querySelector("main").innerHTML = "";
-        document.getElementById('liste').innerHTML = '';
-        document.getElementById('liste').innerHTML = '';
-        document.getElementById("chat").hidden = true;
-        document.getElementById("log_in").hidden = false;
-        document.getElementById("timer").hidden = true;
-        document.getElementById("listBloc").hidden = true;
-        document.getElementById("screen_score").hidden = true;
-        document.getElementById("menu").hidden = true;
-        sock.emit("disconectRoom");
-    }
-
-
     /**
      *  Fermer la zone de choix d'une image
      */
@@ -363,7 +335,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     sock.on('dessin', function () {
         document.getElementById('drawing').hidden = false;
-        document.getElementById('choix').hidden = false;
     });
     sock.on('menu', function () {
         document.getElementById('menu').hidden = false
@@ -380,12 +351,11 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     sock.on("invitation", function (data) {
 
-        if (currentUser === data[1] && data[2] != room) {
+        if (currentUser === data[1] && data[2] !== room) {
             audio = new Audio('./ressources/son_des_enfers/zelaNotif.mp3');
             audio.play();
             roomJoin = data[2];
             document.getElementById("invitationBlock").hidden = false;
-
             document.getElementById("nomInvit").innerHTML = "<span>" + data[0] + "</span>";
         }
     });
@@ -405,7 +375,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("listBloc").hidden = false;
         document.getElementById("screen_score").hidden = true;
         document.getElementById("menu").hidden = true;
+        console.log("HIDE CHOIX");
         document.getElementById("choix").hidden = true;
+        document.getElementById("labelHelp").hidden = true;
         document.getElementById("invitationBlock").hidden = true;
         document.getElementById("room").hidden = true;
     }
@@ -501,8 +473,8 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         this.isDown = false;
         // fillStyle pour le dessin
         this.fsBG = "white";
-            // fillStyle pour le calque
-            this.fsFG = "white";
+        // fillStyle pour le calque
+        this.fsFG = "white";
         // strokeStyle pour le dessin
         this.ssBG = "white";
         // strokeStyle pour le calque
@@ -586,7 +558,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("screen_score").hidden = false;
 
         document.getElementById("choix").hidden = true;
-        document.getElementById(labelHelp).hidden = true;
+        document.getElementById("labelHelp").hidden = true;
         document.getElementById("drawing").hidden = true;
         document.getElementById("chat").hidden = true;
         document.getElementById("log_in").hidden = true;
@@ -657,10 +629,10 @@ sock.on('next_turn2', function () {
     estGagnant = false;
     isHelped = false;
     isDessinateur = false;
-    timeLeft=0;
+    timeLeft = 0;
     document.getElementById("new").hidden = true;
     document.getElementById("choix").hidden = true;
-   document.getElementById("labelHelp").hidden = true;
+    document.getElementById("labelHelp").hidden = true;
 
 });
 
@@ -677,7 +649,7 @@ sock.on('initGame', function (data) {
 sock.on('dessinateur', function () {
     change();
     isDessinateur = true;
-    console.log("dessinateur");
+    console.log("DESSINATEUR");
     document.getElementById("choix").hidden = false;
     document.getElementById("new").hidden = false;
     afficherChoix();
@@ -726,7 +698,7 @@ function afficherTrucATrouver() {
 
         document.getElementById('labelHelp').hidden = true;
         sock.emit("aide_point", currentUser);
-            isHelped = false;
+        isHelped = false;
     })
 }
 
@@ -889,7 +861,7 @@ function beginTurn() {
 }
 
 sock.on('launchTurn', function (data) {
-    if(isDessinateur) {
+    if (isDessinateur) {
         document.getElementById("labelHelp").hidden = false;
     }
     if (timer) {
