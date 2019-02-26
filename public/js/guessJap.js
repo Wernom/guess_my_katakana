@@ -15,6 +15,7 @@ var score = null;
 var ready = false;
 var timer = false;
 var roomJoin;
+var end = false;
 // on attache les événements que si le client est œcté.
 sock.on("bienvenue", function (id) {
     if (currentUser === id) {
@@ -218,6 +219,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
      *  Quitter le chat et revenir à la page d'accueil.
      */
     function quitter() {
+        document.getElementById("classement").innerHTML = "";
         currentUser = null;
         timeServer = 0;
         timer = 0;
@@ -291,7 +293,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             sock.emit("message", {from: currentUser, to: null, text: "[img:" + e.target.src + "]"});
             toggleImage();
         }
-
     }
 
     /**
@@ -559,29 +560,29 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
 
     sock.on("end", function (listeScore) {
-        document.getElementById("screen_score").hidden = false;
+        if (!end){
+            end = true;
+            document.getElementById("screen_score").hidden = false;
+            document.getElementById("choix").hidden = true;
+            document.getElementById("labelHelp").hidden = true;
+            document.getElementById("drawing").hidden = true;
+            document.getElementById("chat").hidden = true;
+            document.getElementById("log_in").hidden = true;
+            document.getElementById("timer").hidden = true;
+            document.getElementById("listBloc").hidden = true;
+            console.log("END");
+            console.log(listeScore);
+            var keysSorted = Object.keys(listeScore).sort(function (a, b) {
+                return listeScore[b] - listeScore[a]
+            });
 
-        document.getElementById("choix").hidden = true;
-        document.getElementById("labelHelp").hidden = true;
-        document.getElementById("drawing").hidden = true;
-        document.getElementById("chat").hidden = true;
-        document.getElementById("log_in").hidden = true;
-        document.getElementById("timer").hidden = true;
-        document.getElementById("listBloc").hidden = true;
+            keysSorted.forEach(function (data) {
+                document.getElementById("classement").innerHTML += data + ' : ' + listeScore[data] + "points" + '<br>';
+            });
 
-        var keysSorted = Object.keys(listeScore).sort(function (a, b) {
-            return listeScore[b] - listeScore[a]
-        });
+            document.getElementById("btnQuitter").addEventListener("click", quitter);
+        }
 
-        keysSorted.forEach(function (data) {
-            document.getElementById("classement").innerHTML += data + ' : ' + listeScore[data] + "points" + '<br>';
-        });
-
-        document.getElementById("btnQuitter").addEventListener("click", quitter);
-
-
-        sock.emit("logout");
-        //afficher écran des cores.
     });
 
 });

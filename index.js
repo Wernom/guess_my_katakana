@@ -106,7 +106,7 @@ io.on('connection', function (socket) {
             console.log("Sortie de l'utilisateur " + currentID);
             // envoi de l'information de déconnexion
             io.sockets.in(room).emit("message",
-                {from: null, to: null, text: currentID + " a quitté la discussion", date: Date.now()});
+                {from: null, to: null, text: currentID + " a quitté la partie", date: Date.now()});
             // suppression de l'entrée
             delete rooms[room][currentID];
             delete pasEncoreDessinateur[room][currentID];
@@ -189,7 +189,7 @@ io.on('connection', function (socket) {
         socket.in(room).emit("message", {
             from: null,
             to: null,
-            text: currentID + " a rejoint la discussion",
+            text: currentID + " a rejoint la partie",
             date: Date.now()
         });
 
@@ -249,7 +249,7 @@ io.on('connection', function (socket) {
         socket.in(room).emit("message", {
             from: null,
             to: null,
-            text: currentID + " a rejoint la discussion",
+            text: currentID + " a rejoint la partie",
             date: Date.now()
         });
 
@@ -329,7 +329,7 @@ io.on('connection', function (socket) {
             console.log("Sortie de l'utilisateur " + currentID);
             // envoi de l'information de déconnexion
             io.sockets.in(room).emit("message",
-                {from: null, to: null, text: currentID + " a quitté la discussion", date: Date.now()});
+                {from: null, to: null, text: currentID + " a quitté la partie", date: Date.now()});
             // suppression de l'entrée
 
 
