@@ -26,6 +26,7 @@ var currRound = [];
 var baseScore = 7;
 var score = [];
 var nbClientInRoom = [];
+var isDessinateur = [];
 
 function isEmpty(obj) {
 
@@ -84,7 +85,10 @@ function nextTurn(room, timer) {
     }
     io.sockets.in(room).emit('readyTurn', false);
     console.log("dessinateur: " + dessinateur);
-    clients[dessinateur].emit('dessinateur');
+    isDessinateur[room] = dessinateur;
+    if(clients[dessinateur]){
+        clients[dessinateur].emit('dessinateur');
+    }
     io.sockets.in(room).emit('erase');
     trouve[room] = [];
 }
@@ -96,6 +100,101 @@ io.on('connection', function (socket) {
     console.log("Un client s'est connecté");
     var currentID = null;
     var room = null;
+    socket.on('joinRoomInvite', function (data) {
+
+        if (currentID && rooms[room]) {
+            console.log("Sortie de l'utilisateur " + currentID);
+            // envoi de l'information de déconnexion
+            io.sockets.in(room).emit("message",
+                {from: null, to: null, text: currentID + " a quitté la discussion", date: Date.now()});
+            // suppression de l'entrée
+            delete rooms[room][currentID];
+            delete pasEncoreDessinateur[room][currentID];
+            delete pas_trouve[room][currentID];
+            delete score[room][currentID];
+            delete trouve[room][currentID];
+            delete nbClientInRoom[room][currentID];
+
+            //on suprime le salon quand plus personne n'est dedans
+            if (isEmpty(rooms[room])) {
+                console.log(room + ": deleted");
+                delete rooms[room];
+                delete glyph[room];
+                delete nbRound[room];
+                delete currRound[room];
+                delete pasEncoreDessinateur[room];
+                delete pas_trouve[room];
+                delete score[room];
+                delete trouve[room];
+                delete nbClientInRoom[room];
+                delete isDessinateur[room];
+            }
+
+            if (isDessinateur[room] = currentID && rooms[room]){
+                nextTurn(room);
+            }
+
+            // envoi de la nouvelle liste pour mise à jour
+            io.sockets.in(room).emit("liste", score[room]);
+            socket.leave(room);
+        }
+
+        room = data.room;
+
+        if (rooms[room] == null) {// si la room à été détruite entre temps
+            rooms[room] = {};
+            console.log("create room: " + room);
+            socket.emit('menu');
+        } else {
+            console.log("connection to room: " + room);
+            socket.emit('dessin');
+        }
+
+        if (isEmpty(pasEncoreDessinateur[room])) {
+            pasEncoreDessinateur[room] = [];
+        }
+
+        if (isEmpty(pas_trouve[room])) {
+            pas_trouve[room] = [];
+        }
+
+        if (isEmpty(trouve[room])) {
+            trouve[room] = [];
+        }
+
+        if (isEmpty(score[room])) {
+            score[room] = {};
+        }
+
+        if (isEmpty(nbClientInRoom[room])) {
+            nbClientInRoom[room] = 0;
+        }
+
+        rooms[room][currentID] = socket;
+        score[room][currentID] = 0;
+        pasEncoreDessinateur[room].push(currentID);
+        pas_trouve[room].push(currentID);
+        console.log("INIT SCORE");
+        console.log(score);
+        nbClientInRoom[room]++;
+
+
+        socket.join(room);
+
+        console.log("Nouvel utilisateur : " + currentID);
+        // envoi d'un message de bienvenue à ce client
+        console.log(room);
+        socket.in(room).emit("bienvenue", currentID);
+        // envoi aux autres clients
+        socket.in(room).emit("message", {
+            from: null,
+            to: null,
+            text: currentID + " a rejoint la discussion",
+            date: Date.now()
+        });
+
+        io.sockets.in(room).emit("liste", score[room]);
+    });
 
     socket.on('joinRoom', function (roomToJoin) {
         room = roomToJoin;
@@ -176,8 +275,6 @@ io.on('connection', function (socket) {
         currentID = id;
         clients[currentID] = socket;
 
-
-
     });
 
     /**
@@ -234,6 +331,9 @@ io.on('connection', function (socket) {
             io.sockets.in(room).emit("message",
                 {from: null, to: null, text: currentID + " a quitté la discussion", date: Date.now()});
             // suppression de l'entrée
+
+
+
             delete clients[currentID];
             delete rooms[room][currentID];
             delete pasEncoreDessinateur[room][currentID];
@@ -255,13 +355,17 @@ io.on('connection', function (socket) {
                 delete trouve[room];
                 delete nbClientInRoom[room];
             }
+            if (isDessinateur[room] = currentID && rooms[room]){
+                nextTurn(room);
+            }
             // envoi de la nouvelle liste pour mise à jour
             io.sockets.in(room).emit("liste", score[room]);
+            socket.leave(room);
         }
     });
 
     // déconnexion de la socket
-    socket.on("disconnect", function (reason) {
+    socket.on("disconnect", function () {
         // si client était identifié
         if (currentID && rooms[room]) {
             // envoi de l'information de déconnexion
@@ -295,8 +399,14 @@ io.on('connection', function (socket) {
                 delete trouve[room];
                 delete nbClientInRoom[room];
             }
+
+            if (isDessinateur[room] = currentID && rooms[room]){
+                nextTurn(room);
+            }
             // envoi de la nouvelle liste pour mise à jour
             io.sockets.in(room).emit("liste", Object.keys(clients));
+            socket.leave(room);
+
         }
         console.log("Client déconnecté");
     });
@@ -355,7 +465,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('plusDessinateur', function (isHelped) {
-
         if (isHelped) {
             score[room][currentID] += (baseScore + nbClientInRoom[room]) / 2;
             io.sockets.in(room).emit("score", score[room]);
