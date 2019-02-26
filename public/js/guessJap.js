@@ -245,6 +245,33 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         sock.emit("logout");
     }
 
+    function quitterRoom() {
+        timeServer = 0;
+        timer = 0;
+        aTrouverChoix = false;
+        aTrouver = false;
+        essai = 0;
+        estGagnant = false;
+        room = null;
+        isHelped = false;
+        isDessinateur = false;
+        score = null;
+        ready = false;
+        timer = false;
+
+        roomJoin = null;
+        document.querySelector("main").innerHTML = "";
+        document.getElementById('liste').innerHTML = '';
+        document.getElementById('liste').innerHTML = '';
+        document.getElementById("chat").hidden = true;
+        document.getElementById("log_in").hidden = false;
+        document.getElementById("timer").hidden = true;
+        document.getElementById("listBloc").hidden = true;
+        document.getElementById("screen_score").hidden = true;
+        document.getElementById("menu").hidden = true;
+        sock.emit("disconectRoom");
+    }
+
 
     /**
      *  Fermer la zone de choix d'une image
@@ -353,24 +380,24 @@ document.addEventListener("DOMContentLoaded", function (_e) {
 
     sock.on("invitation", function (data) {
 
-        if (currentUser === data[1]) {
+        if (currentUser === data[1] && data[2] != room) {
             audio = new Audio('./ressources/son_des_enfers/zelaNotif.mp3');
             audio.play();
             roomJoin = data[2];
             document.getElementById("invitationBlock").hidden = false;
 
-            document.getElementById("nomInvit").innerHTML += "<span>" + data[0] + "</span>";
+            document.getElementById("nomInvit").innerHTML = "<span>" + data[0] + "</span>";
         }
     });
 
 
     function rejoindre() {
-        var name = currentUser;
-        sock.emit("joinRoom", roomJoin);
-        sock.emit("logout");
-        sock.emit("login", name);
+        var data = {name: currentUser, room: roomJoin};
+        room = roomJoin;
+        // sock.emit("logout");
+        // sock.emit("login", name);
+        sock.emit("joinRoomInvite", data);
         document.querySelector("main").innerHTML = "";
-        document.getElementById('liste').innerHTML = '';
         document.getElementById('liste').innerHTML = '';
         document.getElementById("chat").hidden = false;
         document.getElementById("log_in").hidden = true;
@@ -378,9 +405,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("listBloc").hidden = false;
         document.getElementById("screen_score").hidden = true;
         document.getElementById("menu").hidden = true;
+        document.getElementById("choix").hidden = true;
         document.getElementById("invitationBlock").hidden = true;
         document.getElementById("room").hidden = true;
-
     }
 
     // **********************************
