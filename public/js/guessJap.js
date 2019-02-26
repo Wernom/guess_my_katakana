@@ -586,6 +586,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         document.getElementById("screen_score").hidden = false;
 
         document.getElementById("choix").hidden = true;
+        document.getElementById(labelHelp).hidden = true;
         document.getElementById("drawing").hidden = true;
         document.getElementById("chat").hidden = true;
         document.getElementById("log_in").hidden = true;
@@ -659,6 +660,8 @@ sock.on('next_turn2', function () {
     timeLeft=0;
     document.getElementById("new").hidden = true;
     document.getElementById("choix").hidden = true;
+   document.getElementById("labelHelp").hidden = true;
+
 });
 
 sock.on('readyTurn', function (data) {
@@ -712,16 +715,16 @@ function afficherChoix() {
 
 function choix(key) {
     sock.emit("find", aTrouverChoix[key]);
-    document.getElementById("aide").hidden = false;
+    document.getElementById("labelHelp").hidden = false;
 }
 
 function afficherTrucATrouver() {
     document.getElementById("glyph").innerHTML = aTrouver.key;
-    document.getElementById('aide').addEventListener('click', function () {
+    document.getElementById('labelHelp').addEventListener('click', function () {
         isHelped = true;
         document.getElementById("glyph").innerHTML = '&#' + aTrouver.ascii + ';';
 
-        document.getElementById("aide").hidden = true;
+        document.getElementById('labelHelp').hidden = true;
         sock.emit("aide_point", currentUser);
             isHelped = false;
     })
@@ -886,6 +889,9 @@ function beginTurn() {
 }
 
 sock.on('launchTurn', function (data) {
+    if(isDessinateur) {
+        document.getElementById("labelHelp").hidden = false;
+    }
     if (timer) {
         ready = data[1];
         console.log("READY?" + ready);

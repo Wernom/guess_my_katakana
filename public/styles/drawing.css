@@ -62,8 +62,9 @@
 #toolbox label[for=tracer] {
     background-image: url(../images/icone-pinceau.png);
 }
-#toolbox label[for=gommer] {
-    background-image: url(../images/icone-gomme.png);
+#toolbox label[for=help] {
+    margin-top: 245%;
+    background-image: url(../images/icone-aide.png);
 }
 #toolbox label[for=ligne] {
     background-image: url(../images/icone-trait.png);
