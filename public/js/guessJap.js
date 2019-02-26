@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     function quitter() {
         document.getElementById("classement").innerHTML = "";
         currentUser = null;
+        end = false;
         timeServer = 0;
         timer = 0;
         aTrouverChoix = false;
