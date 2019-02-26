@@ -235,13 +235,14 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         roomJoin = null;
         document.querySelector("main").innerHTML = "";
         document.getElementById('liste').innerHTML = '';
-        document.getElementById('liste').innerHTML = '';
         document.getElementById("chat").hidden = true;
         document.getElementById("log_in").hidden = false;
         document.getElementById("timer").hidden = true;
         document.getElementById("listBloc").hidden = true;
         document.getElementById("screen_score").hidden = true;
+        document.getElementById("choix").hidden = true;
         document.getElementById("menu").hidden = true;
+        document.getElementById("drawing").hidden = true;
         sock.emit("logout");
     }
 
