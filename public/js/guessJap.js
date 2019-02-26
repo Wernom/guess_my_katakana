@@ -333,6 +333,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     document.getElementById("btnRechercher").addEventListener("click", rechercher);
     document.getElementById("btnInviter").addEventListener("click", inviter);
     document.getElementById("join").addEventListener("click", rejoindre);
+    document.getElementById("decline").addEventListener("click", refuser);
     document.getElementById("recherche").addEventListener("keydown", function (e) {
         if (e.keyCode === 13) {
             rechercher();
@@ -372,7 +373,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     // force l'affichage de l'écran de connexion
     quitter();
 
-
+    function refuser(){
+        document.getElementById("invitationBlock").hidden=true;
+    }
     function inviter() {
         var invitTarget = document.getElementById("InvitationSender").value;
         sock.emit("send_invit", [currentUser, invitTarget, room]);
