@@ -355,7 +355,7 @@ io.on('connection', function (socket) {
                 delete trouve[room];
                 delete nbClientInRoom[room];
             }
-            if (isDessinateur[room] = currentID && rooms[room]){
+            if (isDessinateur[room] = currentID && rooms[room] && nbRound[room] > currRound[room]){
                 nextTurn(room);
             }
             // envoi de la nouvelle liste pour mise à jour
@@ -400,7 +400,7 @@ io.on('connection', function (socket) {
                 delete nbClientInRoom[room];
             }
 
-            if (isDessinateur[room] = currentID && rooms[room]){
+            if (isDessinateur[room] = currentID && rooms[room] && nbRound[room] > currRound[room]){
                 nextTurn(room);
             }
             // envoi de la nouvelle liste pour mise à jour

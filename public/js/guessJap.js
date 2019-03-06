@@ -215,6 +215,11 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     }
 
 
+    function goLogin(){
+        document.getElementById("screen_score").hidden = true;
+        document.getElementById("log_in").hidden = false;
+    }
+
     /**
      *  Quitter le chat et revenir à la page d'accueil.
      */
@@ -301,7 +306,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
      */
     document.getElementById("btnConnecter").addEventListener("click", connect);
     document.getElementById("btnQuitter").addEventListener("click", quitter);
-    document.getElementById("leave").addEventListener("click", quitter);
+    document.getElementById("leave").addEventListener("click", quitter);//changer fct quitter pour juste cacher panel
     document.getElementById("btnFermer").addEventListener("click", toggleImage);
     document.getElementById("btnImage").addEventListener("click", toggleImage);
     document.getElementById("btnEnvoyer").addEventListener("click", envoyer);
@@ -370,8 +375,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     function rejoindre() {
         var data = {name: currentUser, room: roomJoin};
         room = roomJoin;
-        // sock.emit("logout");
-        // sock.emit("login", name);
         sock.emit("joinRoomInvite", data);
         document.querySelector("main").innerHTML = "";
         document.getElementById('liste').innerHTML = '';
@@ -581,7 +584,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
                 document.getElementById("classement").innerHTML += data + ' : ' + listeScore[data] + "points" + '<br>';
             });
 
-            document.getElementById("btnQuitter").addEventListener("click", quitter);
+            // document.getElementById("btnQuitter").addEventListener("click", quitter);
         }
 
     });
